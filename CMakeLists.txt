@@ -1,0 +1,25 @@
+# Distributed under the MIT License (See accompanying file /LICENSE)
+# CMake build : tweedledum library
+cmake_minimum_required(VERSION 3.8)
+project(tweedledum LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED on)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall -Wextra")
+
+# Options
+# =============================================================================
+option(TWEEDLEDUM_TOOLS "Build tools" OFF)
+option(TWEEDLEDUM_USE_EXTERNAL_FMT "Use an external fmt library" OFF)
+
+# 3rd-party libraries
+# =============================================================================
+add_subdirectory(third_party)
+
+# Library
+# =============================================================================
+add_library(tweedledum INTERFACE)
+target_include_directories(tweedledum INTERFACE ${PROJECT_SOURCE_DIR}/include)
+target_link_libraries(tweedledum INTERFACE fmt)
+
