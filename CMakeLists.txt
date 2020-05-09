@@ -23,3 +23,8 @@ add_library(tweedledum INTERFACE)
 target_include_directories(tweedledum INTERFACE ${PROJECT_SOURCE_DIR}/include)
 target_link_libraries(tweedledum INTERFACE fmt)
 
+# Tools
+# =============================================================================
+if(TWEEDLEDUM_TOOLS)
+  add_subdirectory(tools)
+endif()
