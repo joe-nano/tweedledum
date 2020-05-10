@@ -5,6 +5,8 @@
 #include "tweedledum/IO/qasm/Lexer.h"
 #include "tweedledum/IO/qasm/PPLexer.h"
 #include "tweedledum/IO/qasm/Parser.h"
+#include "tweedledum/IO/write_utf8.h"
+#include "tweedledum/IR/Module.h"
 #include "tweedledum/Support/SourceManager.h"
 
 #include <flags/flags.h>
@@ -41,9 +43,10 @@ int main(int argc, char** argv)
 			token = pp_lexer.next_token();
 		}
 	} else if (test == "parser") {
-		bool success = qasm::parse_file(source_manager);
-		if (success) {
+		Module* module = qasm::parse_file(source_manager);
+		if (module != nullptr) {
 			fmt::print("Successfully parsed the input file.\n");
+			write_utf8(module);
 		}
 	}
 	return EXIT_SUCCESS;

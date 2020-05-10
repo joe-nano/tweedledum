@@ -4,6 +4,7 @@
 *------------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include "../../IR/Module.h"
 #include "../../Support/SourceManager.h"
 #include "PPLexer.h"
 #include "Token.h"
@@ -18,22 +19,24 @@ class Parser {
 public:
 	Parser(SourceManager& source_manager) : 
 	source_manager_(source_manager), pp_lexer_(source_manager_) 
-	{}
+	{
+		module_.reset(new Module());
+	}
 
-	bool parse_module()
+	Module* parse_module()
 	{
 		parse_header();
 		while (1) {
 			switch (current_token_.kind()) {
 			case Token::Kinds::eof:
-				return true;
+				return module_.release();
 
 			case Token::Kinds::kw_creg:
-				parse_register();
+				parse_creg();
 				break;
 
 			case Token::Kinds::kw_qreg:
-				parse_register();
+				parse_qreg();
 				break;
 
 			case Token::Kinds::kw_gate:
@@ -50,7 +53,7 @@ public:
 			default:
 				emit_error(current_token_.spelling());
 				emit_error("expected a top-level entity.");
-				return false;
+				return nullptr;
 			}
 		}
 	}
@@ -108,15 +111,33 @@ private:
 		expect_and_consume_token(Token::Kinds::semicolon);
 	}
 
-	void parse_register()
+	void parse_creg()
 	{
-		// If we get here, then either 'qreg' or 'creg' was matched
+		// If we get here, then 'creg' was matched
 		consume_token();
-		expect_and_consume_token(Token::Kinds::identifier);
+		std::string_view name = expect_and_consume_token(Token::Kinds::identifier);
 		expect_and_consume_token(Token::Kinds::l_square);
-		expect_and_consume_token(Token::Kinds::nninteger);
+		uint32_t size = expect_and_consume_token(Token::Kinds::nninteger);
 		expect_and_consume_token(Token::Kinds::r_square);
 		expect_and_consume_token(Token::Kinds::semicolon);
+		for (uint32_t i = 0u; i < size; ++i) {
+			module_->circuit_.create_cbit(fmt::format("{}_{}", name, i));
+		}
+		return;
+	}
+
+	void parse_qreg()
+	{
+		// If we get here, then 'qreg' was matched
+		consume_token();
+		std::string_view name = expect_and_consume_token(Token::Kinds::identifier);
+		expect_and_consume_token(Token::Kinds::l_square);
+		uint32_t size = expect_and_consume_token(Token::Kinds::nninteger);
+		expect_and_consume_token(Token::Kinds::r_square);
+		expect_and_consume_token(Token::Kinds::semicolon);
+		for (uint32_t i = 0u; i < size; ++i) {
+			module_->circuit_.create_qubit(fmt::format("{}_{}", name, i));
+		}
 		return;
 	}
 
@@ -391,9 +412,12 @@ private:
 	// we expected to see a token following another token (e.g., the ';' at the end of a
 	// statement).
 	uint32_t prev_token_location_;
+
+	// This is the result module we are parsing into.
+	std::unique_ptr<Module> module_;
 };
 
-bool parse_file(SourceManager& source_manager)
+Module* parse_file(SourceManager& source_manager)
 {
 	return Parser(source_manager).parse_module();
 }
