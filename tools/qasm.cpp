@@ -1,13 +1,13 @@
-/*--------------------------------------------------------------------------------------------------
-| Part of the tweedledum project.  This file is distributed under the MIT License.
+/*------------------------------------------------------------------------------
+| Part of the tweedledum.  This file is distributed under the MIT License.
 | See accompanying file /LICENSE for details.
-*-------------------------------------------------------------------------------------------------*/
-#include "tweedledum/IO/qasm/Lexer.h"
-#include "tweedledum/IO/qasm/PPLexer.h"
-#include "tweedledum/IO/qasm/Parser.h"
-#include "tweedledum/IO/write_utf8.h"
-#include "tweedledum/IR/Module.h"
-#include "tweedledum/Support/SourceManager.h"
+*-----------------------------------------------------------------------------*/
+#include "tweedledum/ir/Module.h"
+#include "tweedledum/parsers/qasm/Lexer.h"
+#include "tweedledum/parsers/qasm/PPLexer.h"
+#include "tweedledum/parsers/qasm/Parser.h"
+#include "tweedledum/support/SourceManager.h"
+#include "tweedledum/writers/write_utf8.h"
 
 #include <flags/flags.h>
 #include <fmt/format.h>
@@ -19,13 +19,12 @@ int main(int argc, char** argv)
 
 	auto const path = app.get<std::string>("i");
 	auto const test = app.get<std::string>("t", "lexer");
-
 	if (!path) {
 		fmt::print("No input file.\n");
 		return EXIT_SUCCESS;
 	}
+
 	using namespace tweedledum;
-	
 	SourceManager source_manager;
 	Source const* source = source_manager.add_file(path.value());
 	if (test == "lexer") {
