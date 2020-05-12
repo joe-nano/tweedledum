@@ -1,7 +1,7 @@
-/*-------------------------------------------------------------------------------------------------
-| Part of the tweedledum project.  This file is distributed under the MIT License.
+/*------------------------------------------------------------------------------
+| Part of the tweedledum.  This file is distributed under the MIT License.
 | See accompanying file /LICENSE for details.
-*------------------------------------------------------------------------------------------------*/
+*-----------------------------------------------------------------------------*/
 #pragma once
 
 #include "Source.h"
@@ -33,7 +33,8 @@ public:
 
 	Source const* add_file(std::filesystem::path const& file_path)
 	{
-		std::unique_ptr<File> file = File::open(file_path, next_offset_);
+		std::unique_ptr<File> file
+		    = File::open(file_path, next_offset_);
 		if (file != nullptr) {
 			Source const* file_ptr = file.get();
 			next_offset_ += file->length() + 1;
@@ -46,7 +47,8 @@ public:
 
 	Source const* add_buffer(std::string_view buffer)
 	{
-		std::unique_ptr<Source> buf = Source::create(buffer, next_offset_);
+		std::unique_ptr<Source> buf
+		    = Source::create(buffer, next_offset_);
 		Source const* buf_ptr = buf.get();
 		next_offset_ += buf->length() + 1;
 		location_map_.emplace(next_offset_, sources_.size());
@@ -56,9 +58,11 @@ public:
 
 	std::string location_str(uint32_t const location) const
 	{
-		uint32_t const source_id = location_map_.lower_bound(location)->second;
+		uint32_t const source_id
+		    = location_map_.lower_bound(location)->second;
 		Source const* source = sources_.at(source_id).get();
-		return fmt::format("<{}:{}:{}>", source->name(), source->line(location), source->column(location));
+		return fmt::format("<{}:{}:{}>", source->name(),
+		    source->line(location), source->column(location));
 	}
 
 private:

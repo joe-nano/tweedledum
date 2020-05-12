@@ -1,21 +1,22 @@
-/*-------------------------------------------------------------------------------------------------
-| Part of the tweedledum project.  This file is distributed under the MIT License.
+/*------------------------------------------------------------------------------
+| Part of the tweedledum.  This file is distributed under the MIT License.
 | See accompanying file /LICENSE for details.
-*------------------------------------------------------------------------------------------------*/
+*-----------------------------------------------------------------------------*/
 #pragma once
 
-#include "../../Support/Source.h"
-#include "../../Support/SourceManager.h"
+#include "../../support/Source.h"
+#include "../../support/SourceManager.h"
 #include "Lexer.h"
 #include "Token.h"
 
+#include <filesystem>
 #include <fmt/format.h>
 #include <memory>
 #include <vector>
-#include <filesystem>
 
 namespace tweedledum::qasm {
 
+// clang-format off
 static std::string const std_include
     = "gate u3(theta,phi,lambda) q { U(theta,phi,lambda) q; }gate u2(phi,lambda) q { "
       "U(pi/2,phi,lambda) q; }gate u1(lambda) q { U(0,0,lambda) q; }gate cx c,t { CX c,t; }gate id "
@@ -30,12 +31,13 @@ static std::string const std_include
       "u1(-lambda/2) b;  cx a,b;}gate cu1(lambda) a,b{  u1(lambda/2) a;  cx a,b;  u1(-lambda/2) b; "
       " cx a,b;  u1(lambda/2) b;}gate cu3(theta,phi,lambda) c, t{  u1((lambda-phi)/2) t;  cx c,t;  "
       "u3(-theta/2,0,-(phi+lambda)/2) t;  cx c,t;  u3(theta/2,phi,0) t;}";
+// clang-format on
 
 /*! \brief Pre-processor Lexer class
  *
- * This is the class able to handle include's.  You see, lexers know only about tokens within a
- * single source file.
- * 
+ * This is the class able to handle includes.  You see, lexers know only about
+ * tokens within a single source file.
+ *
  */
 class PPLexer {
 public:
@@ -93,13 +95,14 @@ public:
 	}
 
 private:
-	// The "include" tokens have just been read, read the file to be included
-	// from the Lexer, then include it!
+	// The "include" tokens have just been read, read the file to be
+	// included from the Lexer, then include it!
 	void handle_include()
 	{
 		Token token = current_lexer_->next_token();
 		if (!token.is(Token::Kinds::string)) {
-			std::cerr << "Include must be followed by a file name\n";
+			std::cerr << "Include must be followed by a file "
+			             "name\n";
 			return;
 		}
 		std::string_view target_path = token;
@@ -107,8 +110,9 @@ private:
 		if (!token.is(Token::Kinds::semicolon)) {
 			std::cerr << "Missing a ';'\n";
 		}
-		// This path is relative to the path 
-		std::filesystem::path path(target_path.substr(1, target_path.length() - 2));
+		// This path is relative to the path
+		std::filesystem::path path(
+		    target_path.substr(1, target_path.length() - 2));
 		if (path.filename() == "qelib1.inc") {
 			add_target_buffer(std_include);
 			return;
@@ -117,7 +121,8 @@ private:
 			add_target_file(path.native());
 		} else {
 			Source const* current_src = current_lexer_->source();
-			std::filesystem::path parent_path = current_src->parent_path();
+			std::filesystem::path parent_path
+			    = current_src->parent_path();
 			path = parent_path / path;
 			add_target_file(path.native());
 		}

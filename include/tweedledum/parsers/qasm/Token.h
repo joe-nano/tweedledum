@@ -1,7 +1,7 @@
-/*-------------------------------------------------------------------------------------------------
-| Part of the tweedledum project.  This file is distributed under the MIT License.
+/*------------------------------------------------------------------------------
+| Part of the tweedledum.  This file is distributed under the MIT License.
 | See accompanying file /LICENSE for details.
-*------------------------------------------------------------------------------------------------*/
+*-----------------------------------------------------------------------------*/
 #pragma once
 
 #include <cstdint>
@@ -14,14 +14,17 @@ namespace tweedledum::qasm {
 class Token {
 public:
 	enum class Kinds : uint8_t {
-		#define TOKEN(X) X,
-		#include "Tokens.def"
+#define TOKEN(X) X,
+#include "Tokens.def"
 	};
 
-	Token() : kind_(Token::Kinds::unknown), location_(0u), length_(0u), content_ptr_(nullptr)
+	Token()
+	    : kind_(Token::Kinds::unknown), location_(0u), length_(0u),
+	      content_ptr_(nullptr)
 	{}
 
-	Token(Kinds const k, uint32_t const loc, uint32_t const len, char const* content)
+	Token(Kinds const k, uint32_t const loc, uint32_t const len,
+	    char const* content)
 	    : kind_(k), location_(loc), length_(len), content_ptr_(content)
 	{}
 
@@ -42,12 +45,12 @@ public:
 		return kind_;
 	}
 
-	uint32_t location() const 
+	uint32_t location() const
 	{
 		return location_;
 	}
 
-	uint32_t length() const 
+	uint32_t length() const
 	{
 		return length_;
 	}
@@ -86,21 +89,21 @@ private:
 };
 
 static std::unordered_map<std::string, Token::Kinds> const pp_tokens = {
-	#define TOKEN(X)
-	#define PPKEYWORD(X) {#X, Token::Kinds::pp_ ## X},
-	#include "Tokens.def"
+#define TOKEN(X)
+#define PPKEYWORD(X) {#X, Token::Kinds::pp_##X},
+#include "Tokens.def"
 };
 
 static std::unordered_map<std::string, Token::Kinds> const kw_tokens = {
-	#define TOKEN(X)
-	#define KEYWORD(X,Y) {Y, Token::Kinds::kw_ ## X},
-	#define UOPERATOR(X,Y) {Y, Token::Kinds::kw_uop_ ## X},
-	#include "Tokens.def"
+#define TOKEN(X)
+#define KEYWORD(X, Y) {Y, Token::Kinds::kw_##X},
+#define UOPERATOR(X, Y) {Y, Token::Kinds::kw_uop_##X},
+#include "Tokens.def"
 };
 
 static std::string const token_names[] = {
-	#define TOKEN(X) #X,
-	#include "Tokens.def"
+#define TOKEN(X) #X,
+#include "Tokens.def"
 };
 
 static std::string_view token_name(Token::Kinds k)

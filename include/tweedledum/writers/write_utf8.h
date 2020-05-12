@@ -1,10 +1,10 @@
-/*-------------------------------------------------------------------------------------------------
-| Part of the tweedledum project.  This file is distributed under the MIT License.
+/*------------------------------------------------------------------------------
+| Part of the tweedledum.  This file is distributed under the MIT License.
 | See accompanying file /LICENSE for details.
-*------------------------------------------------------------------------------------------------*/
+*-----------------------------------------------------------------------------*/
 #pragma once
 
-#include "../IR/Module.h"
+#include "../ir/Module.h"
 
 #include <iostream>
 #include <string>
@@ -16,8 +16,7 @@ namespace detail {
 
 class string_builder {
 public:
-	explicit string_builder() : max_name_length_(0u)
-	{}
+	explicit string_builder() : max_name_length_(0u) {}
 
 	void add_qubit(std::string_view name)
 	{
@@ -45,10 +44,11 @@ public:
 	{
 		std::string result;
 		for (uint32_t i = 0u; i < circuit_lines_.size(); i += 3u) {
-			result += fmt::format("{0:>{1}}   {2}\n{3:>{1}} : {4}\n{0:>{1}}   {5}\n",
-			                      "", max_name_length_, circuit_lines_.at(i),
-			                      wires_.at(i / 3), circuit_lines_.at(i + 1),
-			                      circuit_lines_.at(i + 2));
+			result += fmt::format("{0:>{1}}   {2}\n{3:>{1}} : "
+			                      "{4}\n{0:>{1}}   {5}\n",
+			    "", max_name_length_, circuit_lines_.at(i),
+			    wires_.at(i / 3), circuit_lines_.at(i + 1),
+			    circuit_lines_.at(i + 2));
 		}
 		return result;
 	}
@@ -59,9 +59,9 @@ private:
 	uint32_t max_name_length_;
 };
 
-}
+} // namespace detail
 
-/*! \brief 
+/*! \brief
  */
 void write_utf8(Module const* module, std::ostream& os = std::cout)
 {

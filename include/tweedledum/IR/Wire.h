@@ -1,7 +1,7 @@
-/*-------------------------------------------------------------------------------------------------
-| Part of the tweedledum project.  This file is distributed under the MIT License.
+/*------------------------------------------------------------------------------
+| Part of the tweedledum.  This file is distributed under the MIT License.
 | See accompanying file /LICENSE for details.
-*------------------------------------------------------------------------------------------------*/
+*-----------------------------------------------------------------------------*/
 #pragma once
 
 #include <cassert>
@@ -15,34 +15,36 @@ namespace tweedledum::wire {
 
 /* \brief Simple class to hold a wire identifier ``wire::Id``
  *
- *  In tweedledum, a wire can be either a quantum or classical.  A quantum wire holds the state of a
- *  qubit, and it is represented by a line in quantum circuit diagrams.  In tweedledum, a quantum
- *  wire is equivalent to a qubit.  Similarly, a classical wire holds the state of a cbit, and it
- *  is represented by a double line in quantum circuit diagrams.
+ *  In tweedledum, a wire can be either a quantum or classical.  A quantum wire
+ * holds the state of a qubit, and it is represented by a line in quantum
+ * circuit diagrams.  In tweedledum, a quantum wire is equivalent to a qubit.
+ * Similarly, a classical wire holds the state of a cbit, and it is represented
+ * by a double line in quantum circuit diagrams.
  *
  *  An ``wire::Id`` serves three purposes:
  *  1) Uniquely identifying a wire within a circuit
  *  2) Informing if a wire is a qubit or a cbit
- *  3) When used withing controlled gates, informing if the use of the wire is complemented or not
- *     e.g., a CNOT can be negatively controlled by adding a NOT before and after the control
+ *  3) When used withing controlled gates, informing if the use of the wire is
+ * complemented or not e.g., a CX can be negatively controlled by adding a NOT
+ * before and after the control
  *
- * Limits: a circuit can only have 2^30 - 1 wires! (the last one I use to identify a invalid wire)
+ * Limits: a circuit can only have 2^30 - 1 wires! (the last one I use to
+ * identify a invalid wire)
  */
 class Id {
 public:
 #pragma region Types and constructors
 	constexpr Id(uint32_t const uid, bool const is_qubit)
-	    : uid_(uid)
-	    , is_qubit_(static_cast<uint32_t>(is_qubit))
-	    , is_complemented_(0)
+	    : uid_(uid), is_qubit_(static_cast<uint32_t>(is_qubit)),
+	      is_complemented_(0)
 	{
 		assert(uid <= (std::numeric_limits<uint32_t>::max() >> 2));
 	}
 
-	constexpr Id(uint32_t const uid, bool const is_qubit, bool const is_complemented)
-	    : uid_(uid)
-	    , is_qubit_(static_cast<uint32_t>(is_qubit))
-	    , is_complemented_(static_cast<uint32_t>(is_complemented))
+	constexpr Id(
+	    uint32_t const uid, bool const is_qubit, bool const is_complemented)
+	    : uid_(uid), is_qubit_(static_cast<uint32_t>(is_qubit)),
+	      is_complemented_(static_cast<uint32_t>(is_complemented))
 	{
 		assert(uid <= (std::numeric_limits<uint32_t>::max() >> 2));
 	}
@@ -64,7 +66,7 @@ public:
 		return static_cast<bool>(is_qubit_);
 	}
 
-	/*! \brief Guarantee the return of an uncomplemented ``wire::Id`` */
+	/*! \brief Guarantee the return of a not complemented ``wire::Id`` */
 	Id wire() const
 	{
 		return Id(uid(), is_qubit());
@@ -107,8 +109,6 @@ public:
 	}
 #pragma endregion
 
-	static Id invalid;
-
 private:
 	union {
 		uint32_t data_;
@@ -130,7 +130,8 @@ constexpr Id make_cbit(uint32_t const uid, bool is_complemented = false)
 	return Id(uid, /* is_qubit */ false, is_complemented);
 }
 
-constexpr Id invalid_id = Id(std::numeric_limits<uint32_t>::max() >> 2, true, true);
+constexpr Id invalid_id
+    = Id(std::numeric_limits<uint32_t>::max() >> 2, true, true);
 
 enum class Mode : uint8_t {
 	in,
@@ -139,7 +140,7 @@ enum class Mode : uint8_t {
 	ancilla,
 };
 
-/* \brief
+/* \brief Class used for storing wire information in a circuit
  */
 class Storage {
 	struct WireInfo {
@@ -147,17 +148,14 @@ class Storage {
 		Mode mode;
 		std::string name;
 
-		WireInfo(Id const wire_id, Mode const mode, std::string_view name)
-		    : wire_id(wire_id)
-		    , mode(mode)
-		    , name(name)
+		WireInfo(
+		    Id const wire_id, Mode const mode, std::string_view name)
+		    : wire_id(wire_id), mode(mode), name(name)
 		{}
 	};
 
 public:
-	Storage()
-	    : num_qubits_(0u)
-	{}
+	Storage() : num_qubits_(0u) {}
 
 	uint32_t num_wires() const
 	{
@@ -203,10 +201,11 @@ public:
 
 	/* \brief Add a new name to identify a wire.
 	 *
-	 * \param rename If true, this flag indicates that `new_name` must substitute the previous
-	 *               name. (default: `true`)
+	 * \param rename If true, this flag indicates that `new_name` must
+	 * substitute the previous name. (default: `true`)
 	 */
-	void wire_name(Id const wire_id, std::string_view new_name, bool const rename)
+	void wire_name(
+	    Id const wire_id, std::string_view new_name, bool const rename)
 	{
 		if (rename) {
 			name_to_wire_.erase(wires_.at(wire_id).name);
@@ -247,4 +246,4 @@ private:
 	std::unordered_map<std::string, Id> name_to_wire_;
 };
 
-} // namespace tweedledum
+} // namespace tweedledum::wire

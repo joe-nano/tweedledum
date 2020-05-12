@@ -1,12 +1,12 @@
-/*-------------------------------------------------------------------------------------------------
-| Part of the tweedledum project.  This file is distributed under the MIT License.
+/*------------------------------------------------------------------------------
+| Part of the tweedledum.  This file is distributed under the MIT License.
 | See accompanying file /LICENSE for details.
-*------------------------------------------------------------------------------------------------*/
+*-----------------------------------------------------------------------------*/
 #pragma once
 
 #include <cstdint>
-#include <fstream>
 #include <filesystem>
+#include <fstream>
 #include <map>
 #include <memory>
 #include <optional>
@@ -14,15 +14,17 @@
 
 namespace tweedledum {
 
-/*! \brief This object owns the soruce content string. */
+/*! \brief This object owns the source content string. */
 class Source {
 public:
-	static std::unique_ptr<Source> create(std::string_view content, uint32_t const offset)
+	static std::unique_ptr<Source> create(
+	    std::string_view content, uint32_t const offset)
 	{
 		return std::unique_ptr<Source>(new Source(content, offset));
 	}
 
-	static std::unique_ptr<Source> create(std::string&& content, uint32_t const offset)
+	static std::unique_ptr<Source> create(
+	    std::string&& content, uint32_t const offset)
 	{
 		return std::unique_ptr<Source>(new Source(content, offset));
 	}
@@ -61,7 +63,8 @@ public:
 	{
 		uint32_t line_start = location - offset_;
 		while (line_start && content_.at(line_start - 1) != '\n'
-		       && content_.at(line_start - 1) != '\r') {
+		       && content_.at(line_start - 1) != '\r')
+		{
 			--line_start;
 		}
 		return location - offset_ - line_start + 1;
@@ -79,13 +82,11 @@ public:
 
 protected:
 	Source(std::string_view content, uint32_t const offset)
-	    : content_(content)
-	    , offset_(offset)
+	    : content_(content), offset_(offset)
 	{}
 
 	Source(std::string&& content, uint32_t const offset)
-	    : content_(content)
-	    , offset_(offset)
+	    : content_(content), offset_(offset)
 	{}
 
 private:
@@ -112,12 +113,13 @@ private:
 /*! \brief File source. */
 class File final : public Source {
 public:
-	static std::unique_ptr<File> open(std::filesystem::path const& file_path, uint32_t const offset)
+	static std::unique_ptr<File> open(
+	    std::filesystem::path const& file_path, uint32_t const offset)
 	{
 		std::optional<std::string> content = load_content(file_path);
 		if (content) {
-			return std::unique_ptr<File>(
-			    new File(file_path, std::move(content.value()), offset));
+			return std::unique_ptr<File>(new File(
+			    file_path, std::move(content.value()), offset));
 		}
 		return nullptr;
 	}
@@ -133,7 +135,8 @@ public:
 	}
 
 private:
-	File(std::filesystem::path const& file_path, std::string&& content, uint32_t const offset)
+	File(std::filesystem::path const& file_path, std::string&& content,
+	    uint32_t const offset)
 	    : Source(content, offset), file_path_(file_path)
 	{}
 
@@ -141,7 +144,8 @@ private:
 	File(const File&) = delete;
 	File& operator=(const File&) = delete;
 
-	static std::optional<std::string> load_content(std::filesystem::path const& file_path)
+	static std::optional<std::string> load_content(
+	    std::filesystem::path const& file_path)
 	{
 		std::string content;
 		std::ifstream input_file(file_path);

@@ -1,0 +1,49 @@
+/*------------------------------------------------------------------------------
+| Part of the tweedledum.  This file is distributed under the MIT License.
+| See accompanying file /LICENSE for details.
+*-----------------------------------------------------------------------------*/
+#ifndef GATE
+#define GATE(X, Y, Z, V)
+#endif
+
+// Meta gates
+GATE(undefined, undefined, na, "-")
+GATE(opaque,    undefined, na, "G")
+GATE(input,     undefined, na, "-")
+GATE(measure_x, undefined, na, "Mz")
+GATE(measure_y, undefined, na, "My")
+GATE(measure_z, undefined, na, "Mx")
+
+// Non-parameterisable gates
+GATE(i,    i,    na, "I")
+GATE(h,    h,    xy, "H")
+GATE(x,    x,    x,  "X")
+GATE(y,    y,    y,  "Y")
+GATE(z,    z,    z,  "Z")
+GATE(s,    sdg,  z,  "S")
+GATE(sdg,  s,    z,  "Sd")
+GATE(t,    tdg,  z,  "T")
+GATE(tdg,  t,    z,  "Td")
+GATE(swap, swap, na, "SWAP")
+
+GATE(cx,  cx,  x, "X")
+GATE(cy,  cy,  y, "Y")
+GATE(cz,  cz,  z, "Z")
+GATE(ncx, ncx, x, "X")
+GATE(ncy, ncy, y, "Y")
+GATE(ncz, ncz, z, "Z")
+
+// Parameterisable gates
+GATE(u3, u3, xyz, "U3")
+GATE(r1, r1, z, "R1")
+GATE(rx, rx, x, "Rx")
+GATE(ry, ry, y, "Ry")
+GATE(rz, rz, z, "Rz")
+GATE(crx,  crx,  x, "Rx")
+GATE(cry,  cry,  y, "Ry")
+GATE(crz,  crz,  z, "Rz")
+GATE(ncrx, ncrx, x, "Rx")
+GATE(ncry, ncry, y, "Ry")
+GATE(ncrz, ncrz, z, "Rz")
+
+#undef GATE

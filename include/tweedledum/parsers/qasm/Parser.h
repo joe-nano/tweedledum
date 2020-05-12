@@ -1,11 +1,11 @@
-/*-------------------------------------------------------------------------------------------------
-| Part of the tweedledum project.  This file is distributed under the MIT License.
+/*------------------------------------------------------------------------------
+| Part of the tweedledum.  This file is distributed under the MIT License.
 | See accompanying file /LICENSE for details.
-*------------------------------------------------------------------------------------------------*/
+*-----------------------------------------------------------------------------*/
 #pragma once
 
-#include "../../IR/Module.h"
-#include "../../Support/SourceManager.h"
+#include "../../ir/Module.h"
+#include "../../support/SourceManager.h"
 #include "PPLexer.h"
 #include "Token.h"
 
@@ -17,8 +17,8 @@ namespace tweedledum::qasm {
  */
 class Parser {
 public:
-	Parser(SourceManager& source_manager) : 
-	source_manager_(source_manager), pp_lexer_(source_manager_) 
+	Parser(SourceManager& source_manager)
+	    : source_manager_(source_manager), pp_lexer_(source_manager_)
 	{
 		module_.reset(new Module());
 	}
@@ -60,8 +60,8 @@ public:
 
 private:
 #pragma region Helper functions
-	// Consume the current token 'current_token_' and lex the next one.  Returns the location of
-	// the consumed token.
+	// Consume the current token 'current_token_' and lex the next one.
+	// Returns the location of the consumed token.
 	uint32_t consume_token()
 	{
 		prev_token_location_ = current_token_.location();
@@ -69,9 +69,10 @@ private:
 		return prev_token_location_;
 	}
 
-	// The parser expects that the current token is of 'expected' kind.  If it is not, it emits
-	// a diagnostic, puts the parser in a error state and returns the current_token_.
-	// Otherwise consumes the token and returns it.
+	// The parser expects that the current token is of 'expected' kind.  If
+	// it is not, it emits a diagnostic, puts the parser in a error state
+	// and returns the current_token_. Otherwise consumes the token and
+	// returns it.
 	Token expect_and_consume_token(Token::Kinds const expected)
 	{
 		if (!current_token_.is(expected)) {
@@ -83,8 +84,9 @@ private:
 		return return_token;
 	}
 
-	// The parser try to see if the current token is of 'expected' kind.  If it is not, returns
-	// false.  Otherwise consumes the token and returns true.
+	// The parser try to see if the current token is of 'expected' kind.  If
+	// it is not, returns false.  Otherwise consumes the token and returns
+	// true.
 	bool try_and_consume_token(Token::Kinds const expected)
 	{
 		if (!current_token_.is(expected)) {
@@ -97,11 +99,12 @@ private:
 	void emit_error(std::string_view message) const
 	{
 		fmt::print("[error] {} {}\n",
-		           source_manager_.location_str(current_token_.location()), message);
+		    source_manager_.location_str(current_token_.location()),
+		    message);
 	}
 #pragma endregion
 
-#pragma region Parsing Top-level entities
+#pragma region Parsing Top - level entities
 	/*! \brief Parse OpenQASM file header */
 	void parse_header()
 	{
@@ -115,13 +118,16 @@ private:
 	{
 		// If we get here, then 'creg' was matched
 		consume_token();
-		std::string_view name = expect_and_consume_token(Token::Kinds::identifier);
+		std::string_view name
+		    = expect_and_consume_token(Token::Kinds::identifier);
 		expect_and_consume_token(Token::Kinds::l_square);
-		uint32_t size = expect_and_consume_token(Token::Kinds::nninteger);
+		uint32_t size
+		    = expect_and_consume_token(Token::Kinds::nninteger);
 		expect_and_consume_token(Token::Kinds::r_square);
 		expect_and_consume_token(Token::Kinds::semicolon);
 		for (uint32_t i = 0u; i < size; ++i) {
-			module_->circuit_.create_cbit(fmt::format("{}_{}", name, i));
+			module_->circuit_.create_cbit(
+			    fmt::format("{}_{}", name, i));
 		}
 		return;
 	}
@@ -130,13 +136,16 @@ private:
 	{
 		// If we get here, then 'qreg' was matched
 		consume_token();
-		std::string_view name = expect_and_consume_token(Token::Kinds::identifier);
+		std::string_view name
+		    = expect_and_consume_token(Token::Kinds::identifier);
 		expect_and_consume_token(Token::Kinds::l_square);
-		uint32_t size = expect_and_consume_token(Token::Kinds::nninteger);
+		uint32_t size
+		    = expect_and_consume_token(Token::Kinds::nninteger);
 		expect_and_consume_token(Token::Kinds::r_square);
 		expect_and_consume_token(Token::Kinds::semicolon);
 		for (uint32_t i = 0u; i < size; ++i) {
-			module_->circuit_.create_qubit(fmt::format("{}_{}", name, i));
+			module_->circuit_.create_qubit(
+			    fmt::format("{}_{}", name, i));
 		}
 		return;
 	}
@@ -243,12 +252,11 @@ private:
 		}
 	}
 
-
 #pragma endregion
 
 #pragma region Parsing expressions
 	/*! \brief Parse expression list (<explist>) */
-	// <explist> = <exp> 
+	// <explist> = <exp>
 	//           | <explist> , <exp>
 	void parse_explist()
 	{
@@ -262,11 +270,11 @@ private:
 
 	/*! \brief Parse an expression (<exp>) */
 	// <exp> = <real> | <nninteger> | pi | <id>
-	//       | <exp> + <exp> | <exp> - <exp> 
-	//       | <exp> * <exp> | <exp> / <exp> 
-	//       | - <exp> 
+	//       | <exp> + <exp> | <exp> - <exp>
+	//       | <exp> * <exp> | <exp> / <exp>
+	//       | - <exp>
 	//       | <exp> ^ <exp>
-	//       | ( <exp> ) 
+	//       | ( <exp> )
 	//       | <unaryop> ( <exp> )
 	void parse_exp(uint32_t min_precedence = 1)
 	{
@@ -408,9 +416,9 @@ private:
 	// The current token we are peeking.
 	Token current_token_;
 
-	// The location of the token we previously consumed.  This is used for diagnostics in which
-	// we expected to see a token following another token (e.g., the ';' at the end of a
-	// statement).
+	// The location of the token we previously consumed.  This is used for
+	// diagnostics in which we expected to see a token following another
+	// token (e.g., the ';' at the end of a statement).
 	uint32_t prev_token_location_;
 
 	// This is the result module we are parsing into.
