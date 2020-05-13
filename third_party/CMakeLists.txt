@@ -44,7 +44,6 @@ if (NOT TARGET mockturtle)
   target_link_libraries(mockturtle INTERFACE bill kitty lorina sparsepp percy)
 endif()
 
-
 if (NOT TARGET percy)
   add_library(percy INTERFACE)
   target_include_directories(percy SYSTEM INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/percy)
@@ -64,6 +63,14 @@ if (NOT TARGET percy)
     target_compile_definitions(libabcsat PUBLIC WIN32_NO_DLL)
   endif()
   target_link_libraries(percy INTERFACE libabcsat)
+endif()
+
+if(TWEEDLEDUM_USE_EXTERNAL_PYBIND11)
+  if (NOT TARGET pybind11)
+    find_package(pybind11 REQUIRED)
+  endif()
+else()
+  add_subdirectory(pybind11 EXCLUDE_FROM_ALL)
 endif()
 
 if (NOT TARGET sparsepp)

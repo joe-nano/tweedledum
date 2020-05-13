@@ -10,9 +10,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall -Wextra")
 
 # Options
 # =============================================================================
+option(TWEEDLEDUM_PYBINDS "Build python bindings" ON)
 option(TWEEDLEDUM_TESTS "Build tests" OFF)
 option(TWEEDLEDUM_TOOLS "Build tools" OFF)
 option(TWEEDLEDUM_USE_EXTERNAL_FMT "Use an external fmt library" OFF)
+option(TWEEDLEDUM_USE_EXTERNAL_PYBIND11 "Use an external pybind11 library" OFF)
 
 # 3rd-party libraries
 # =============================================================================
@@ -23,6 +25,12 @@ add_subdirectory(third_party)
 add_library(tweedledum INTERFACE)
 target_include_directories(tweedledum INTERFACE ${PROJECT_SOURCE_DIR}/include)
 target_link_libraries(tweedledum INTERFACE bill easy fmt glucose kitty mockturtle)
+
+# Python bindings
+# =============================================================================
+if(TWEEDLEDUM_PYBINDS)
+  add_subdirectory(python)
+endif()
 
 # Tests
 # =============================================================================
