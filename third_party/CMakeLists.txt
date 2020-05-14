@@ -44,6 +44,13 @@ if (NOT TARGET mockturtle)
   target_link_libraries(mockturtle INTERFACE bill kitty lorina sparsepp percy)
 endif()
 
+if(TWEEDLEDUM_USE_EXTERNAL_JSON)
+  find_package(nlohmann_json REQUIRED)
+else()
+  add_library(nlohmann_json INTERFACE)
+  target_include_directories(nlohmann_json INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/nlohmann)
+endif()
+
 if (NOT TARGET percy)
   add_library(percy INTERFACE)
   target_include_directories(percy SYSTEM INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/percy)
