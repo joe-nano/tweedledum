@@ -65,7 +65,21 @@ struct stg_from_exact_esop {
 				bits >>= 1;
 				mask >>= 1;
 			}
-			circuit.create_op(GateLib::ncx, controls, target);
+			switch (controls.size()) {
+			case 0:
+				circuit.create_op(GateLib::x, controls, target);
+				break;
+
+			case 1:
+				circuit.create_op(
+				    GateLib::cx, controls, target);
+				break;
+
+			default:
+				circuit.create_op(
+				    GateLib::ncx, controls, target);
+				break;
+			}
 		}
 	}
 };
@@ -107,7 +121,21 @@ struct stg_from_pkrm {
 				bits >>= 1;
 				mask >>= 1;
 			}
-			circuit.create_op(GateLib::ncx, controls, target);
+			switch (controls.size()) {
+			case 0:
+				circuit.create_op(GateLib::x, controls, target);
+				break;
+
+			case 1:
+				circuit.create_op(
+				    GateLib::cx, controls, target);
+				break;
+
+			default:
+				circuit.create_op(
+				    GateLib::ncx, controls, target);
+				break;
+			}
 		}
 	}
 };
@@ -145,7 +173,21 @@ struct stg_from_pprm {
 				}
 				bits >>= 1;
 			}
-			circuit.create_op(GateLib::ncx, controls, target);
+			switch (controls.size()) {
+			case 0:
+				circuit.create_op(GateLib::x, controls, target);
+				break;
+
+			case 1:
+				circuit.create_op(
+				    GateLib::cx, controls, target);
+				break;
+
+			default:
+				circuit.create_op(
+				    GateLib::ncx, controls, target);
+				break;
+			}
 		}
 	}
 };

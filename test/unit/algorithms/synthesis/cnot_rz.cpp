@@ -7,8 +7,7 @@
 #include "tweedledum/ir/CircuitDAG.h"
 #include "tweedledum/ir/Gate.h"
 #include "tweedledum/ir/Netlist.h"
-#include "tweedledum/ir/operations/w3_op.h"
-#include "tweedledum/ir/operations/wn32_op.h"
+#include "tweedledum/ir/Operation.h"
 #include "tweedledum/support/Angle.h"
 #include "tweedledum/support/BitMatrixRM.h"
 
@@ -16,8 +15,8 @@
 
 using namespace tweedledum;
 
-TEMPLATE_PRODUCT_TEST_CASE("CNOT-RZ synthesis", "[cnot_rz][template]",
-    (CircuitDAG, Netlist), (wn32_op, w3_op))
+TEMPLATE_TEST_CASE(
+    "CNOT-RZ synthesis", "[cnot_rz][template]", CircuitDAG, Netlist)
 {
 	ParityMap terms;
 	BitMatrixRM<> transform(3u, 3u);

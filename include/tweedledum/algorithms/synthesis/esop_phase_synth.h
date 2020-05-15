@@ -42,7 +42,22 @@ void esop_phase_synth(Circuit& circuit, std::vector<wire::Id> const& qubits,
 			}
 		}
 		if (!targets.empty()) {
-			circuit.create_op(GateLib::ncz, controls, targets);
+			switch (controls.size()) {
+			case 0:
+				circuit.create_op(
+				    GateLib::z, controls, targets);
+				break;
+
+			case 1:
+				circuit.create_op(
+				    GateLib::cz, controls, targets);
+				break;
+
+			default:
+				circuit.create_op(
+				    GateLib::ncz, controls, targets);
+				break;
+			}
 		}
 	}
 }

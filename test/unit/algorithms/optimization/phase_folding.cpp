@@ -7,16 +7,14 @@
 #include "tweedledum/ir/CircuitDAG.h"
 #include "tweedledum/ir/Gate.h"
 #include "tweedledum/ir/Netlist.h"
-#include "tweedledum/ir/operations/w2_op.h"
-#include "tweedledum/ir/operations/w3_op.h"
-#include "tweedledum/ir/operations/wn32_op.h"
+#include "tweedledum/ir/Operation.h"
 
 #include <catch.hpp>
 
 using namespace tweedledum;
 
-TEMPLATE_PRODUCT_TEST_CASE("Phase folding", "[phase_folding][template]",
-    (Netlist, CircuitDAG), (w2_op, w3_op, wn32_op))
+TEMPLATE_TEST_CASE(
+    "Phase folding", "[phase_folding][template]", Netlist, CircuitDAG)
 {
 	TestType network;
 	network.create_qubit("x1");

@@ -4,27 +4,22 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
-#include "../Gate.h"
-#include "../Wire.h"
+#include "../support/Angle.h"
+#include "Gate.h"
+#include "Wire.h"
 
-#include <array>
-#include <cassert>
-#include <utility>
+#include <algorithm>
 #include <vector>
 
 namespace tweedledum {
 
-/*! \brief Three-wire operation */
-class w3_op : public Gate {
-	using gate_type = tweedledum::Gate;
-
-#pragma region Helper functions(Init)
-	void init_one_io(wire::Id const t)
+class Operation : public Gate {
+	void init_one_wire(wire::Id const t)
 	{
 		assert(t.is_qubit() && t != wire::invalid_id
 		       && !t.is_complemented());
 		assert(is_one_qubit());
-		wires_ = {t, wire::invalid_id, wire::invalid_id};
+		wires_.at(0) = t;
 	}
 
 	// When dealing with controlled gates (e.g.CX, CZ) id0 is the control
@@ -32,17 +27,18 @@ class w3_op : public Gate {
 	// *) In case of SWAP they are both targets
 	// *) In case of MEASUREMENT they are both targets and id1 _must_ be the
 	// cbit
-	void init_two_io(wire::Id const w0, wire::Id const w1)
+	void init_two_wire(wire::Id const w0, wire::Id const w1)
 	{
 		assert(w0.is_qubit() && w0 != wire::invalid_id);
 		assert(w1 != wire::invalid_id);
 		assert(w0 != w1 && "The wires must be different");
-		assert(is_two_qubit() || is_measurement());
+		// assert(is_two_qubit() || is_measurement());
 		// In a measurement gate the second I/O must be a cbit:
 		assert(
 		    (is_measurement() && !w1.is_qubit()) || !is_measurement());
 
-		wires_ = {w0, w1, wire::invalid_id};
+		wires_.at(0) = w0;
+		wires_.at(1) = w1;
 		if (is_measurement()) {
 			assert(!w0.is_complemented());
 			assert(!w1.is_qubit());
@@ -65,7 +61,7 @@ class w3_op : public Gate {
 		}
 	}
 
-	void init_three_io(
+	void init_three_wire(
 	    wire::Id const c0, wire::Id const c1, wire::Id const t)
 	{
 		assert(c0.is_qubit() && c0 != wire::invalid_id);
@@ -76,89 +72,77 @@ class w3_op : public Gate {
 		assert(!is_meta() && !is_measurement());
 		assert(!is_one_qubit() && !is_two_qubit());
 
-		wires_ = {c0, c1, t};
+		wires_.at(0) = c0;
+		wires_.at(1) = c1;
+		wires_.at(2) = t;
 		// Normalization step to make CCX(0, 1, 2) == CCX(1, 0, 2);
 		if (c1.uid() < c0.uid()) {
 			std::swap(wires_.at(0), wires_.at(1));
 		}
 	}
-#pragma endregion
 
 public:
-#pragma region Constants
-	constexpr static uint32_t max_num_wires = 3u;
-#pragma endregion
-
-#pragma region Constructors
-	w3_op(Gate const& g, wire::Id const t)
-	    : Gate(g), num_controls_(0), num_targets_(1),
-	      wires_({t.wire(), wire::invalid_id, wire::invalid_id})
+	Operation(Gate const& g, wire::Id const t)
+	    : Gate(g), num_controls_(0), num_targets_(1), wires_(1u, t.wire())
 	{
 		assert(t != wire::invalid_id && !t.is_complemented());
 		assert(is_meta() || (is_one_qubit() && t.is_qubit()));
 	}
 
-	// When dealing with controlled gates (e.g. CX) id0 is the control and
-	// id1 the target
-	// *) In case of SWAP they are both targets
-	// *) In case of MEASUREMENT they are both targets and id1 _must_ be the
-	// cbit
-	w3_op(Gate const& g, wire::Id const w0, wire::Id const w1)
+	Operation(Gate const& g, wire::Id const w0, wire::Id const w1)
 	    : Gate(g), num_controls_(1u), num_targets_(1u),
-	      wires_({wire::invalid_id, wire::invalid_id, wire::invalid_id})
+	      wires_(2u, wire::invalid_id)
 	{
-		init_two_io(w0, w1);
+		init_two_wire(w0, w1);
 	}
 
-	w3_op(Gate const& g, wire::Id const c0, wire::Id const c1,
+	Operation(Gate const& g, wire::Id const c0, wire::Id const c1,
 	    wire::Id const t)
 	    : Gate(g), num_controls_(2u), num_targets_(1u),
-	      wires_({wire::invalid_id, wire::invalid_id, wire::invalid_id})
+	      wires_(3u, wire::invalid_id)
 	{
-		init_three_io(c0, c1, t);
+		init_three_wire(c0, c1, t);
 	}
 
-	w3_op(Gate const& g, std::vector<wire::Id> const& cs,
+	Operation(Gate const& g, std::vector<wire::Id> const& cs,
 	    std::vector<wire::Id> const& ts)
 	    : Gate(g), num_controls_(cs.size()), num_targets_(ts.size()),
-	      wires_({wire::invalid_id, wire::invalid_id, wire::invalid_id})
+	      wires_(num_controls_ + num_targets_, wire::invalid_id)
 	{
 		assert(ts.size() >= 1u
 		       && "The gate must have at least one target");
 		assert(
 		    ts.size() <= 2u && "The gate must have at most two target");
-		assert(cs.size() + ts.size() > 0u);
-		assert(cs.size() + ts.size() <= max_num_wires);
-
 		switch (cs.size()) {
 		case 0u:
 			if (ts.size() == 1) {
-				init_one_io(ts.at(0));
+				init_one_wire(ts.at(0));
 			} else if (ts.size() == 2) {
-				init_two_io(ts.at(0), ts.at(1));
+				init_two_wire(ts.at(0), ts.at(1));
+			} else {
+				std::abort();
 			}
 			return;
 
 		case 1u:
-			init_two_io(cs.at(0), ts.at(0));
+			init_two_wire(cs.at(0), ts.at(0));
 			return;
 
 		case 2u:
-			init_three_io(cs.at(0), cs.at(1), ts.at(0));
+			init_three_wire(cs.at(0), cs.at(1), ts.at(0));
 			return;
 
 		default:
+			std::partial_sort_copy(cs.begin(), cs.end(),
+			    wires_.begin(), wires_.end() - 1);
+			wires_.at(num_controls()) = ts.at(0);
 			break;
 		}
-		// It should never get here
-		std::abort();
 	}
-#pragma endregion
 
-#pragma region Properties
 	uint32_t num_wires() const
 	{
-		return num_targets() + num_controls();
+		return wires_.size();
 	}
 
 	uint32_t num_controls() const
@@ -186,24 +170,21 @@ public:
 	uint32_t position(wire::Id const w_id) const
 	{
 		assert(w_id != wire::invalid_id);
-		if (wires_.at(0).uid() == w_id.uid()) {
-			return 0u;
-		} else if (wires_.at(1).uid() == w_id.uid()) {
-			return 1u;
-		} else if (wires_.at(2).uid() == w_id.uid()) {
-			return 2u;
+		for (uint32_t i = 0u; i < wires_.size(); ++i) {
+			if (wires_.at(i).uid() == w_id.uid()) {
+				return i;
+			}
 		}
 		std::abort();
 	}
 
 	wire::Id wire(uint32_t const position) const
 	{
-		assert(position < max_num_wires);
 		assert(wires_.at(position) != wire::invalid_id);
 		return wires_.at(position);
 	}
 
-	bool is_adjoint(w3_op const& other) const
+	bool is_adjoint(Operation const& other) const
 	{
 		assert(!is_meta() && !other.is_meta());
 		assert(!is_measurement() && !other.is_measurement());
@@ -219,7 +200,7 @@ public:
 		return wires_ == other.wires_;
 	}
 
-	bool is_dependent(w3_op const& other) const
+	bool is_dependent(Operation const& other) const
 	{
 		// First, we deal with the easy cases:
 		// If one of the gates is a meta gate, then we act
@@ -241,9 +222,6 @@ public:
 		// dependent.
 		if (is(gate_ids::swap) || other.is(gate_ids::swap)) {
 			for (uint32_t i = 0; i < wires_.size(); ++i) {
-				if (wires_.at(i) == wire::invalid_id) {
-					break;
-				}
 				for (uint32_t j = 0; j < other.wires_.size();
 				     ++j) {
 					if (wires_.at(i) == other.wires_.at(0))
@@ -296,39 +274,24 @@ public:
 		});
 		return dependent;
 	}
-#pragma endregion
 
-#pragma region Const iterators
 	template<typename Fn>
 	void foreach_control(Fn&& fn) const
 	{
-		switch (num_controls()) {
-		case 1u:
-			fn(control(0u));
-			return;
-
-		case 2u:
-			fn(control(0u));
-			fn(control(1u));
-			return;
-
-		default:
-			break;
+		for (uint32_t i = 0; i < num_controls(); ++i) {
+			fn(wires_.at(i));
 		}
 	}
 
 	template<typename Fn>
 	void foreach_target(Fn&& fn) const
 	{
-		fn(target());
-		if (num_targets() == 2u) {
-			fn(target(1u));
+		for (uint32_t i = num_controls(); i < wires_.size(); ++i) {
+			fn(wires_.at(i));
 		}
 	}
-#pragma endregion
 
-#pragma region Overloads
-	bool operator==(w3_op const& other) const
+	bool operator==(Operation const& other) const
 	{
 		if (_gate() != other._gate()) {
 			return false;
@@ -341,7 +304,6 @@ public:
 		}
 		return wires_ == other.wires_;
 	}
-#pragma endregion
 
 private:
 	Gate const& _gate() const
@@ -349,10 +311,14 @@ private:
 		return static_cast<Gate const&>(*this);
 	}
 
-private:
-	uint32_t num_controls_ : 16;
-	uint32_t num_targets_ : 16;
-	std::array<wire::Id, max_num_wires> wires_;
+	// TODO: eventually this will have to be a pointer to either a gate or
+	//       a gate defined as a subscircuit, unitary matrix, etc...
+	// I think the concept of Gate will need to be more abstract
+	uint32_t num_controls_;
+	uint32_t num_targets_;
+	// TODO: Small Vector optimization, symbolic parameters
+	// Maybe it should be const
+	std::vector<wire::Id> wires_;
 };
 
 } // namespace tweedledum

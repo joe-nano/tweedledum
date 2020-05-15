@@ -6,16 +6,15 @@
 
 #include "tweedledum/ir/Gate.h"
 #include "tweedledum/ir/Node.h"
+#include "tweedledum/ir/Operation.h"
 #include "tweedledum/ir/Wire.h"
-#include "tweedledum/ir/operations/w3_op.h"
-#include "tweedledum/ir/operations/wn32_op.h"
 
 #include <catch.hpp>
 
 using namespace tweedledum;
 
-TEMPLATE_PRODUCT_TEST_CASE("Operations DAG 'foreach_input' iterator",
-    "[CircuitDAG][template]", (CircuitDAG), (w3_op, wn32_op))
+TEMPLATE_TEST_CASE("Operations DAG 'foreach_input' iterator",
+    "[CircuitDAG][template]", (CircuitDAG))
 {
 	using node_type = typename TestType::node_type;
 	TestType network;
@@ -73,8 +72,8 @@ TEMPLATE_PRODUCT_TEST_CASE("Operations DAG 'foreach_input' iterator",
 	}
 }
 
-TEMPLATE_PRODUCT_TEST_CASE("Operations 'foreach_output' iterator",
-    "[CircuitDAG][template]", (CircuitDAG), (w3_op, wn32_op))
+TEMPLATE_TEST_CASE("Operations 'foreach_output' iterator",
+    "[CircuitDAG][template]", (CircuitDAG))
 {
 	using node_type = typename TestType::node_type;
 	TestType network;

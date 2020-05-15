@@ -7,16 +7,15 @@
 #include "tweedledum/ir/CircuitDAG.h"
 #include "tweedledum/ir/Gate.h"
 #include "tweedledum/ir/Netlist.h"
-#include "tweedledum/ir/operations/w3_op.h"
-#include "tweedledum/ir/operations/wn32_op.h"
+#include "tweedledum/ir/Operation.h"
 #include "tweedledum/support/BitMatrixRM.h"
 
 #include <catch.hpp>
 
 using namespace tweedledum;
 
-TEMPLATE_PRODUCT_TEST_CASE("CNOT patel synthesis", "[cnot_patel][template]",
-    (CircuitDAG, Netlist), (wn32_op, w3_op))
+TEMPLATE_TEST_CASE(
+    "CNOT patel synthesis", "[cnot_patel][template]", CircuitDAG, Netlist)
 {
 	using op_type = typename TestType::op_type;
 	std::vector<uint32_t> rows

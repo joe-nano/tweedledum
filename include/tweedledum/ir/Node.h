@@ -69,7 +69,7 @@ struct Irregular {
 	std::vector<Id> children;
 
 	Irregular(OpType const& op, uint32_t const data_value)
-	    : op(op), data(data_value), children(op.num_wires())
+	    : op(op), data(data_value), children(op.num_wires(), invalid_id)
 	{}
 
 	bool operator==(Irregular const& other) const

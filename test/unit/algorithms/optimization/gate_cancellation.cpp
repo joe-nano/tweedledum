@@ -6,17 +6,16 @@
 
 #include "tweedledum/algorithms/verification/unitary_verify.h"
 #include "tweedledum/ir/CircuitDAG.h"
+#include "tweedledum/ir/Operation.h"
 #include "tweedledum/ir/Wire.h"
-#include "tweedledum/ir/operations/w3_op.h"
-#include "tweedledum/ir/operations/wn32_op.h"
 
 #include <catch.hpp>
 #include <vector>
 
 using namespace tweedledum;
 
-TEMPLATE_PRODUCT_TEST_CASE("Simple gate cancellations",
-    "[gate_cancellation][optmization]", (CircuitDAG), (w3_op, wn32_op))
+TEMPLATE_TEST_CASE("Simple gate cancellations",
+    "[gate_cancellation][optmization]", (CircuitDAG))
 {
 	TestType network;
 	SECTION("Single qubit gates")
@@ -179,8 +178,8 @@ TEMPLATE_PRODUCT_TEST_CASE("Simple gate cancellations",
 	}
 }
 
-TEMPLATE_PRODUCT_TEST_CASE("Even Sequences", "[gate_cancellation][optmization]",
-    (CircuitDAG), (wn32_op, w3_op))
+TEMPLATE_TEST_CASE(
+    "Even Sequences", "[gate_cancellation][optmization]", (CircuitDAG))
 {
 	TestType network;
 	SECTION("Even sequece of hadamards")
@@ -243,8 +242,8 @@ TEMPLATE_PRODUCT_TEST_CASE("Even Sequences", "[gate_cancellation][optmization]",
 	}
 }
 
-TEMPLATE_PRODUCT_TEST_CASE("Odd Sequences", "[gate_cancellation][optmization]",
-    (CircuitDAG), (wn32_op, w3_op))
+TEMPLATE_TEST_CASE(
+    "Odd Sequences", "[gate_cancellation][optmization]", (CircuitDAG))
 {
 	TestType network;
 	SECTION("Odd sequece of hadamards")

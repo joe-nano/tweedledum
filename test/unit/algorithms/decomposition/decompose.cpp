@@ -8,10 +8,9 @@
 #include "tweedledum/ir/CircuitDAG.h"
 #include "tweedledum/ir/Gate.h"
 #include "tweedledum/ir/Netlist.h"
+#include "tweedledum/ir/Operation.h"
 #include "tweedledum/ir/Unitary.h"
 #include "tweedledum/ir/Wire.h"
-#include "tweedledum/ir/operations/w3_op.h"
-#include "tweedledum/ir/operations/wn32_op.h"
 
 #include <algorithm>
 #include <catch.hpp>
@@ -19,8 +18,7 @@
 
 using namespace tweedledum;
 
-TEMPLATE_PRODUCT_TEST_CASE(
-    "Decompose using barenco", "[decomp]", (Netlist), (wn32_op))
+TEMPLATE_TEST_CASE("Decompose using barenco", "[decomp]", Netlist)
 {
 	TestType circuit;
 	std::vector<wire::Id> qubits(5, wire::invalid_id);
@@ -54,8 +52,7 @@ TEMPLATE_PRODUCT_TEST_CASE(
 	}
 }
 
-TEMPLATE_PRODUCT_TEST_CASE(
-    "IBM", "[decomp]", (Netlist, CircuitDAG), (w3_op, wn32_op))
+TEMPLATE_TEST_CASE("IBM", "[decomp]", Netlist, CircuitDAG)
 {
 	decomp_params params;
 	params.gate_set = gate_set::ibm;

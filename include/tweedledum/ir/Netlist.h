@@ -6,6 +6,7 @@
 
 #include "Gate.h"
 #include "Node.h"
+#include "Operation.h"
 #include "Storage.h"
 #include "Wire.h"
 
@@ -20,7 +21,6 @@ namespace tweedledum {
 /*! \brief Class used to represent a quantum circuit as a list of operations.
  *
  */
-template<typename Operation>
 class Netlist {
 public:
 #pragma region Types and constructors
@@ -116,7 +116,7 @@ public:
 
 	uint32_t decr_value(node_type const& node) const
 	{
-		assert(node.data[0] > 0);
+		assert(node.data > 0);
 		return --node.data;
 	}
 #pragma endregion

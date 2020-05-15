@@ -7,8 +7,8 @@
 #include "tweedledum/algorithms/simulation/simulate_classically.h"
 #include "tweedledum/ir/CircuitDAG.h"
 #include "tweedledum/ir/Netlist.h"
+#include "tweedledum/ir/Operation.h"
 #include "tweedledum/ir/Wire.h"
-#include "tweedledum/ir/operations/wn32_op.h"
 
 #include <catch.hpp>
 #include <kitty/constructors.hpp>
@@ -31,8 +31,8 @@ inline auto circuit_and_map(uint32_t num_qubits)
 } // namespace tweedledum::detail
 
 using namespace tweedledum;
-TEMPLATE_PRODUCT_TEST_CASE("Single-target gate synthesis", "[stg][template]",
-    (CircuitDAG, Netlist), (wn32_op))
+TEMPLATE_TEST_CASE("Single-target gate synthesis", "[stg][template]",
+    CircuitDAG, Netlist)
 {
 	SECTION("Synthesize using stg_from_pkrm")
 	{

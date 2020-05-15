@@ -6,6 +6,7 @@
 
 #include "Gate.h"
 #include "Node.h"
+#include "Operation.h"
 #include "Storage.h"
 #include "Wire.h"
 
@@ -15,13 +16,12 @@ namespace tweedledum {
  * graph.
  *
  */
-template<typename OpType, typename NodeType = node::Regular<OpType>>
 class CircuitDAG {
 public:
 #pragma region Types and constructors
 	using base_type = CircuitDAG;
-	using op_type = OpType;
-	using node_type = NodeType;
+	using op_type = Operation;
+	using node_type = node::Irregular<op_type>;
 	using dstrg_type = Storage<node_type>;
 	using wstrg_type = wire::Storage;
 

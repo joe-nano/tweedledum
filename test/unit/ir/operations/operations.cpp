@@ -3,18 +3,17 @@
 | See accompanying file /LICENSE for details.
 *-----------------------------------------------------------------------------*/
 #include "tweedledum/ir/Gate.h"
+#include "tweedledum/ir/Operation.h"
 #include "tweedledum/ir/Wire.h"
 #include "tweedledum/ir/operations/w2_op.h"
-#include "tweedledum/ir/operations/w3_op.h"
-#include "tweedledum/ir/operations/wn32_op.h"
 #include "tweedledum/support/Angle.h"
 
 #include <catch.hpp>
 
 using namespace tweedledum;
 
-TEMPLATE_TEST_CASE("Check correct instantiation of meta ops", "[ops][inst]",
-    w2_op, w3_op, wn32_op)
+TEMPLATE_TEST_CASE(
+    "Check correct instantiation of meta ops", "[ops][inst]", w2_op, Operation)
 {
 	wire::Id const qubit = wire::make_qubit(0);
 	wire::Id const cbit = wire::make_cbit(1);
@@ -64,7 +63,7 @@ void check_two_wire(Gate const& g, wire::Id const& c, wire::Id const& t)
 
 TEMPLATE_TEST_CASE("Check correct instantiation of non-parameterasible 1 and 2 "
                    "wires operations",
-    "[ops][inst]", w2_op, w3_op, wn32_op)
+    "[ops][inst]", w2_op, Operation)
 {
 	wire::Id const w0 = wire::make_qubit(0);
 	wire::Id const w1 = wire::make_qubit(15);
@@ -104,7 +103,7 @@ TEMPLATE_TEST_CASE("Check correct instantiation of non-parameterasible 1 and 2 "
 
 TEMPLATE_TEST_CASE("Check correct instantiation of parameterasible 1 and 2 "
                    "wires operations",
-    "[ops][inst]", w2_op, w3_op, wn32_op)
+    "[ops][inst]", w2_op, Operation)
 {
 	wire::Id const c = wire::make_qubit(0);
 	wire::Id const t = wire::make_qubit(2);
@@ -154,7 +153,7 @@ void check_three_wire(
 
 TEMPLATE_TEST_CASE("Check correct instantiation of non-parameterasible 3 wires "
                    "operations",
-    "[ops][inst]", w3_op, wn32_op)
+    "[ops][inst]", Operation)
 {
 	wire::Id const c0 = wire::make_qubit(0);
 	wire::Id const c1 = wire::make_qubit(8);
@@ -169,7 +168,7 @@ TEMPLATE_TEST_CASE("Check correct instantiation of non-parameterasible 3 wires "
 
 TEMPLATE_TEST_CASE("Check correct instantiation of parameterasible 3 wires "
                    "operations",
-    "[ops][inst]", w3_op, wn32_op)
+    "[ops][inst]", Operation)
 {
 	wire::Id const c0 = wire::make_qubit(0);
 	wire::Id const c1 = wire::make_qubit(1);
@@ -258,8 +257,8 @@ TEMPLATE_TEST_CASE(
 	CHECK_FALSE(swap_2.is_adjoint(swap_3));
 }
 
-TEMPLATE_TEST_CASE("Check 1, 2 and 3 wires operations adjointness",
-    "[ops][adj]", w3_op, wn32_op)
+TEMPLATE_TEST_CASE(
+    "Check 1, 2 and 3 wires operations adjointness", "[ops][adj]", Operation)
 {
 	wire::Id const q0 = wire::make_qubit(0);
 	wire::Id const q1 = wire::make_qubit(9);
@@ -468,8 +467,7 @@ TEMPLATE_TEST_CASE(
 	}
 }
 
-TEMPLATE_TEST_CASE(
-    "Check 1, 2 and 3 wires dependency", "[ops][dep]", w3_op, wn32_op)
+TEMPLATE_TEST_CASE("Check 1, 2 and 3 wires dependency", "[ops][dep]", Operation)
 {
 	wire::Id const q0 = wire::make_qubit(0);
 	wire::Id const q1 = wire::make_qubit(11);

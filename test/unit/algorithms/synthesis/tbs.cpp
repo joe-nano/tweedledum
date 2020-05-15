@@ -7,15 +7,15 @@
 #include "tweedledum/algorithms/simulation/simulate_classically.h"
 #include "tweedledum/ir/CircuitDAG.h"
 #include "tweedledum/ir/Netlist.h"
-#include "tweedledum/ir/operations/wn32_op.h"
+#include "tweedledum/ir/Operation.h"
 
 #include <catch.hpp>
 #include <cstdint>
 #include <vector>
 
 using namespace tweedledum;
-TEMPLATE_PRODUCT_TEST_CASE("Transformation based synthesis", "[tbs][template]",
-    (CircuitDAG, Netlist), (wn32_op))
+TEMPLATE_TEST_CASE("Transformation based synthesis", "[tbs][template]",
+    CircuitDAG, Netlist)
 {
 	std::vector<uint32_t> permutation = {0, 2, 3, 5, 7, 1, 4, 6};
 	SECTION("Synthesize PRIME(3) - unidirectional TBS")

@@ -5,17 +5,14 @@
 #include "tweedledum/views/LayersView.h"
 
 #include "tweedledum/ir/CircuitDAG.h"
+#include "tweedledum/ir/Operation.h"
 #include "tweedledum/ir/Wire.h"
-#include "tweedledum/ir/operations/w2_op.h"
-#include "tweedledum/ir/operations/w3_op.h"
-#include "tweedledum/ir/operations/wn32_op.h"
 
 #include <catch.hpp>
 
 using namespace tweedledum;
 
-TEMPLATE_PRODUCT_TEST_CASE(
-    "Layers view", "[LayersView][views]", (CircuitDAG), (w2_op, w3_op, wn32_op))
+TEMPLATE_TEST_CASE("Layers view", "[LayersView][views]", (CircuitDAG))
 {
 	TestType network;
 	SECTION("Empty network")

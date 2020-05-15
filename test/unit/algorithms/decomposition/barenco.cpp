@@ -8,8 +8,8 @@
 #include "tweedledum/algorithms/verification/unitary_verify.h"
 #include "tweedledum/ir/Gate.h"
 #include "tweedledum/ir/Netlist.h"
+#include "tweedledum/ir/Operation.h"
 #include "tweedledum/ir/Wire.h"
-#include "tweedledum/ir/operations/wn32_op.h"
 
 #include <algorithm>
 #include <catch.hpp>
@@ -17,8 +17,8 @@
 
 using namespace tweedledum;
 
-TEMPLATE_PRODUCT_TEST_CASE(
-    "Barenco decompostion", "[decomp][barenco]", (Netlist), (wn32_op))
+TEMPLATE_TEST_CASE(
+    "Barenco decompostion", "[decomp][barenco]", (Netlist))
 {
 	SECTION("Without relative phase")
 	{

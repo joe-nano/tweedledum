@@ -9,8 +9,7 @@
 #include "tweedledum/algorithms/utility/to_logic_network.h"
 #include "tweedledum/ir/CircuitDAG.h"
 #include "tweedledum/ir/Netlist.h"
-#include "tweedledum/ir/operations/w3_op.h"
-#include "tweedledum/ir/operations/wn32_op.h"
+#include "tweedledum/ir/Operation.h"
 
 #include <catch.hpp>
 #include <mockturtle/algorithms/equivalence_checking.hpp>
@@ -20,8 +19,8 @@
 using namespace mockturtle;
 using namespace tweedledum;
 
-TEMPLATE_PRODUCT_TEST_CASE("Simple XAG synthesis",
-    "[oracle_synthesis][template]", (CircuitDAG, Netlist), (w3_op, wn32_op))
+TEMPLATE_TEST_CASE("Simple XAG synthesis", "[oracle_synthesis][template]",
+    CircuitDAG, Netlist)
 {
 	auto oracle = xag_network();
 	auto a = oracle.create_pi();
@@ -33,8 +32,8 @@ TEMPLATE_PRODUCT_TEST_CASE("Simple XAG synthesis",
 	xag_synth(quantum_ntk, oracle);
 }
 
-TEMPLATE_PRODUCT_TEST_CASE("Simple XAG synthesis 2",
-    "[oracle_synthesis][template]", (CircuitDAG), (w3_op))
+TEMPLATE_TEST_CASE(
+    "Simple XAG synthesis 2", "[oracle_synthesis][template]", CircuitDAG)
 {
 	auto oracle = xag_network();
 	auto a = oracle.create_pi();
@@ -63,8 +62,8 @@ TEMPLATE_PRODUCT_TEST_CASE("Simple XAG synthesis 2",
 	CHECK(*result);
 }
 
-TEMPLATE_PRODUCT_TEST_CASE("Simple XAG synthesis 3",
-    "[oracle_synthesis][template]", (CircuitDAG), (w3_op))
+TEMPLATE_TEST_CASE(
+    "Simple XAG synthesis 3", "[oracle_synthesis][template]", (CircuitDAG))
 {
 	/* Test includeness */
 	auto oracle = mockturtle::xag_network();

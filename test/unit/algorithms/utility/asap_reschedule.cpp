@@ -9,18 +9,16 @@
 #include "tweedledum/ir/CircuitDAG.h"
 #include "tweedledum/ir/Gate.h"
 #include "tweedledum/ir/Node.h"
+#include "tweedledum/ir/Operation.h"
 #include "tweedledum/ir/Wire.h"
-#include "tweedledum/ir/operations/w2_op.h"
-#include "tweedledum/ir/operations/w3_op.h"
-#include "tweedledum/ir/operations/wn32_op.h"
 #include "tweedledum/views/LayersView.h"
 
 #include <catch.hpp>
 
 using namespace tweedledum;
 
-TEMPLATE_PRODUCT_TEST_CASE("ASAP reschedule",
-    "[asap_reschedule][transformations]", (CircuitDAG), (w2_op, w3_op, wn32_op))
+TEMPLATE_TEST_CASE(
+    "ASAP reschedule", "[asap_reschedule][transformations]", (CircuitDAG))
 {
 	TestType network;
 	wire::Id const q0 = network.create_qubit();

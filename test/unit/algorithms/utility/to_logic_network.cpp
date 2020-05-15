@@ -6,9 +6,8 @@
 
 #include "tweedledum/ir/CircuitDAG.h"
 #include "tweedledum/ir/Netlist.h"
+#include "tweedledum/ir/Operation.h"
 #include "tweedledum/ir/Wire.h"
-#include "tweedledum/ir/operations/w3_op.h"
-#include "tweedledum/ir/operations/wn32_op.h"
 
 #include <catch.hpp>
 #include <kitty/constructors.hpp>
@@ -20,8 +19,8 @@
 using namespace mockturtle;
 using namespace tweedledum;
 
-TEMPLATE_PRODUCT_TEST_CASE("Conver simple quantum circuit to XAG",
-    "[to_logic_network][template]", (CircuitDAG, Netlist), (w3_op, wn32_op))
+TEMPLATE_TEST_CASE("Conver simple quantum circuit to XAG",
+    "[to_logic_network][template]", CircuitDAG, Netlist)
 {
 	TestType quantum_ntk;
 	wire::Id q0 = quantum_ntk.create_qubit("__i_0", wire::Mode::in);

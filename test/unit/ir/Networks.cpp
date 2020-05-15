@@ -6,16 +6,15 @@
 #include "tweedledum/ir/Gate.h"
 #include "tweedledum/ir/Netlist.h"
 #include "tweedledum/ir/Node.h"
+#include "tweedledum/ir/Operation.h"
 #include "tweedledum/ir/Wire.h"
-#include "tweedledum/ir/operations/w3_op.h"
-#include "tweedledum/ir/operations/wn32_op.h"
 
 #include <catch.hpp>
 
 using namespace tweedledum;
 
-TEMPLATE_PRODUCT_TEST_CASE("Common functionality for all networks",
-    "[common][networks]", (Netlist, CircuitDAG), (w3_op, wn32_op))
+TEMPLATE_TEST_CASE("Common functionality for all networks",
+    "[common][networks]", Netlist, CircuitDAG)
 {
 	TestType network;
 	SECTION("An empty network")
@@ -94,8 +93,8 @@ TEMPLATE_PRODUCT_TEST_CASE("Common functionality for all networks",
 	}
 }
 
-TEMPLATE_PRODUCT_TEST_CASE("One-qubit operations", "[one-qubit][networks]",
-    (Netlist, CircuitDAG), (w3_op, wn32_op))
+TEMPLATE_TEST_CASE(
+    "One-qubit operations", "[one-qubit][networks]", Netlist, CircuitDAG)
 {
 	std::vector<Gate> gates
 	    = {GateLib::i, GateLib::h, GateLib::x, GateLib::y, GateLib::z,
@@ -126,8 +125,8 @@ TEMPLATE_PRODUCT_TEST_CASE("One-qubit operations", "[one-qubit][networks]",
 	}
 }
 
-TEMPLATE_PRODUCT_TEST_CASE("Two-qubit operations", "[two-qubit][networks]",
-    (Netlist, CircuitDAG), (w3_op, wn32_op))
+TEMPLATE_TEST_CASE(
+    "Two-qubit operations", "[two-qubit][networks]", Netlist, CircuitDAG)
 {
 	std::vector<Gate> gates
 	    = {GateLib::cx, GateLib::cy, GateLib::cz, GateLib::swap};
@@ -170,8 +169,8 @@ TEMPLATE_PRODUCT_TEST_CASE("Two-qubit operations", "[two-qubit][networks]",
 	}
 }
 
-TEMPLATE_PRODUCT_TEST_CASE("Three-qubit operations", "[three-qubit][networks]",
-    (Netlist, CircuitDAG), (w3_op, wn32_op))
+TEMPLATE_TEST_CASE(
+    "Three-qubit operations", "[three-qubit][networks]", Netlist, CircuitDAG)
 {
 	std::vector<Gate> gates = {GateLib::ncx, GateLib::ncy, GateLib::ncz};
 

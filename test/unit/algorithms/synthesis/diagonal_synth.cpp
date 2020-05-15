@@ -7,16 +7,15 @@
 #include "tweedledum/ir/CircuitDAG.h"
 #include "tweedledum/ir/Gate.h"
 #include "tweedledum/ir/Netlist.h"
-#include "tweedledum/ir/operations/w3_op.h"
-#include "tweedledum/ir/operations/wn32_op.h"
+#include "tweedledum/ir/Operation.h"
 #include "tweedledum/support/Angle.h"
 
 #include <catch.hpp>
 #include <sstream>
 
 using namespace tweedledum;
-TEMPLATE_PRODUCT_TEST_CASE("Synthesize diagonal unitaries",
-    "[diagonal_synth][template]", (Netlist, CircuitDAG), (w3_op, wn32_op))
+TEMPLATE_TEST_CASE("Synthesize diagonal unitaries",
+    "[diagonal_synth][template]", Netlist, CircuitDAG)
 {
 	SECTION("One-qubit")
 	{
