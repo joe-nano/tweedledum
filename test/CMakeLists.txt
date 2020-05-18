@@ -41,6 +41,7 @@ set(tweedledum_tests_files
   "${CMAKE_CURRENT_SOURCE_DIR}/unit/ir/operations/operations.cpp"
   "${CMAKE_CURRENT_SOURCE_DIR}/unit/support/Angle.cpp"
   "${CMAKE_CURRENT_SOURCE_DIR}/unit/views/LayersView.cpp"
+  "${CMAKE_CURRENT_SOURCE_DIR}/unit/writers/write_qasm.cpp"
   )
 
 add_executable(run_tests "${tweedledum_tests_files}")
