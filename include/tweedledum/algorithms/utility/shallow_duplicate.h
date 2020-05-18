@@ -27,7 +27,7 @@ namespace tweedledum {
 template<class Circuit, class NewCircuit>
 NewCircuit shallow_duplicate(Circuit const original, std::string_view name = {})
 {
-	NewCircuit duplicate(name.empty() ? original.name() : name);
+	NewCircuit duplicate(original.module(), name.empty() ? original.name() : name);
 	original.foreach_wire([&](wire::Id wire, std::string_view name) {
 		if (wire.is_qubit()) {
 			duplicate.create_qubit(name, original.wire_mode(wire));
@@ -49,7 +49,7 @@ NewCircuit shallow_duplicate(Circuit const original, std::string_view name = {})
 template<class Circuit>
 Circuit shallow_duplicate(Circuit const original, std::string_view name = {})
 {
-	Circuit duplicate(name.empty() ? original.name() : name);
+	Circuit duplicate(original.module(), name.empty() ? original.name() : name);
 	original.foreach_wire([&](wire::Id wire, std::string_view name) {
 		if (wire.is_qubit()) {
 			duplicate.create_qubit(name, original.wire_mode(wire));

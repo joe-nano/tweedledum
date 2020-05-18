@@ -25,7 +25,7 @@ add_subdirectory(third_party)
 add_library(tweedledum INTERFACE)
 target_include_directories(tweedledum INTERFACE ${PROJECT_SOURCE_DIR}/include)
 target_link_libraries(tweedledum INTERFACE bill easy fmt glucose kitty mockturtle
-                                           nlohmann_json)
+nlohmann_json parallel_hashmap)
 
 # Python bindings
 # =============================================================================

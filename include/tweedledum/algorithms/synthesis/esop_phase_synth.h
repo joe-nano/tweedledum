@@ -4,7 +4,9 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
+#include "../../ir/Circuit.h"
 #include "../../ir/Gate.h"
+#include "../../ir/Module.h"
 #include "../../ir/Wire.h"
 
 #include <easy/esop/esop_from_pprm.hpp>
@@ -23,8 +25,7 @@ namespace tweedledum {
  * \param qubits A qubit mapping
  * \param function A Boolean function
  */
-template<typename Circuit>
-void esop_phase_synth(Circuit& circuit, std::vector<wire::Id> const& qubits,
+inline void esop_phase_synth(Circuit& circuit, std::vector<wire::Id> const& qubits,
     kitty::dynamic_truth_table const& function)
 {
 	for (const auto& cube : easy::esop::esop_from_pprm(function)) {
@@ -42,7 +43,22 @@ void esop_phase_synth(Circuit& circuit, std::vector<wire::Id> const& qubits,
 			}
 		}
 		if (!targets.empty()) {
-			circuit.create_op(GateLib::ncz, controls, targets);
+			switch (controls.size()) {
+			case 0:
+				circuit.create_op(
+				    GateLib::z, controls, targets);
+				break;
+
+			case 1:
+				circuit.create_op(
+				    GateLib::cz, controls, targets);
+				break;
+
+			default:
+				circuit.create_op(
+				    GateLib::ncz, controls, targets);
+				break;
+			}
 		}
 	}
 }
@@ -62,17 +78,14 @@ void esop_phase_synth(Circuit& circuit, std::vector<wire::Id> const& qubits,
  * \algexpects Boolean function
  * \algreturns Quantum circuit
  */
-template<class Circuit>
-Circuit esop_phase_synth(kitty::dynamic_truth_table const& function)
+void esop_phase_synth(Module& module, kitty::dynamic_truth_table const& function)
 {
-	Circuit circuit;
 	uint32_t const num_qubits = function.num_vars();
 	std::vector<wire::Id> qubits;
 	for (uint32_t i = 0u; i < num_qubits; ++i) {
-		qubits.emplace_back(circuit.create_qubit());
+		qubits.emplace_back(module.circuit_.create_qubit());
 	}
-	esop_phase_synth(circuit, qubits, function);
-	return circuit;
+	esop_phase_synth(module.circuit_, qubits, function);
 }
 
 } // namespace tweedledum

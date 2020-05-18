@@ -4,7 +4,9 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
+#include "../../ir/Circuit.h"
 #include "../../ir/Gate.h"
+#include "../../ir/Module.h"
 #include "../../ir/Wire.h"
 #include "../../support/ParityMap.h"
 
@@ -20,8 +22,7 @@
 namespace tweedledum {
 namespace detail {
 
-template<class Circuit>
-void linear_synth_binary(Circuit& circuit, std::vector<wire::Id> const& qubits,
+inline void linear_synth_binary(Circuit& circuit, std::vector<wire::Id> const& qubits,
     ParityMap<uint32_t> parities)
 {
 	const auto num_qubits = qubits.size();
@@ -69,8 +70,7 @@ void linear_synth_binary(Circuit& circuit, std::vector<wire::Id> const& qubits,
 	}
 }
 
-template<class Circuit>
-void linear_synth_gray(Circuit& circuit, std::vector<wire::Id> const& qubits,
+inline void linear_synth_gray(Circuit& circuit, std::vector<wire::Id> const& qubits,
     ParityMap<uint32_t> parities)
 {
 	const auto num_qubits = qubits.size();
@@ -144,8 +144,7 @@ struct linear_synth_params {
  * \param params   The parameters that configure the synthesis process.
  *                 See `linear_synth_params` for details.
  */
-template<class Circuit>
-void linear_synth(Circuit& circuit, std::vector<wire::Id> const& qubits,
+inline void linear_synth(Circuit& circuit, std::vector<wire::Id> const& qubits,
     ParityMap<uint32_t> const& parities, linear_synth_params params = {})
 {
 	assert(qubits.size() <= 32);
@@ -174,18 +173,15 @@ void linear_synth(Circuit& circuit, std::vector<wire::Id> const& qubits,
  * \algexpects List of parities and rotation angles to synthesize
  * \algreturns {CNOT, Rz} circuit
  */
-template<class Circuit>
-Circuit linear_synth(uint32_t num_qubits, ParityMap<uint32_t> const& parities,
-    linear_synth_params params = {})
+inline void linear_synth(Module& module, uint32_t num_qubits,
+    ParityMap<uint32_t> const& parities, linear_synth_params params = {})
 {
 	assert(num_qubits <= 32);
-	Circuit circuit;
 	std::vector<wire::Id> qubits;
 	for (uint32_t i = 0u; i < num_qubits; ++i) {
-		qubits.emplace_back(circuit.create_qubit());
+		qubits.emplace_back(module.circuit_.create_qubit());
 	}
-	linear_synth(circuit, qubits, parities, params);
-	return circuit;
+	linear_synth(module.circuit_, qubits, parities, params);
 }
 
 } // namespace tweedledum

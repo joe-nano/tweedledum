@@ -4,6 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
+#include "../../../ir/Circuit.h"
 #include "../../../ir/Gate.h"
 #include "../../../ir/MappedDAG.h"
 #include "../../../ir/Node.h"
@@ -28,11 +29,10 @@ struct sabre_config {
 #pragma region Implementation details
 namespace detail {
 
-template<typename Network>
 class sabre_router {
 	using swap_type = std::pair<uint32_t, uint32_t>;
-	using node_type = typename Network::node_type;
-	using op_type = typename Network::op_type;
+	using node_type = typename Circuit::node_type;
+	using op_type = typename Circuit::op_type;
 
 public:
 	sabre_router(Device const& device, sabre_config const& parameters)
@@ -42,7 +42,7 @@ public:
 	{}
 
 	MappedDAG route(
-	    Network const& original, std::vector<wire::Id> const& placement)
+	    Circuit const& original, std::vector<wire::Id> const& placement)
 	{
 		assert(placement.size() == device_.num_qubits());
 		reset();
@@ -171,8 +171,8 @@ private:
 				continue;
 			}
 			if (op.is_one_qubit()) {
-				add_op(op, op.target());
-			} else if (!try_add_op(op, op.control(), op.target())) {
+				add_op(op.gate(), op.target());
+			} else if (!try_add_op(op.gate(), op.control(), op.target())) {
 				new_front_layer.push_back(n_id);
 				involved_phy_.at(wire_to_phy(op.control()))
 				    = 1u;
@@ -326,7 +326,7 @@ private:
 
 private:
 	Device const& device_;
-	Network const* original_;
+	Circuit const* original_;
 	MappedDAG* mapped_;
 
 	sabre_config config_;

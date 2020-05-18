@@ -7,10 +7,8 @@
 #include "tweedledum/algorithms/synthesis/oracles/xag_synth.h"
 
 #include "tweedledum/algorithms/utility/to_logic_network.h"
-#include "tweedledum/ir/CircuitDAG.h"
-#include "tweedledum/ir/Netlist.h"
-#include "tweedledum/ir/operations/w3_op.h"
-#include "tweedledum/ir/operations/wn32_op.h"
+#include "tweedledum/ir/Circuit.h"
+#include "tweedledum/ir/Operation.h"
 
 #include <catch.hpp>
 #include <mockturtle/algorithms/equivalence_checking.hpp>
@@ -20,8 +18,7 @@
 using namespace mockturtle;
 using namespace tweedledum;
 
-TEMPLATE_PRODUCT_TEST_CASE("Simple XAG synthesis",
-    "[oracle_synthesis][template]", (CircuitDAG, Netlist), (w3_op, wn32_op))
+TEST_CASE("Simple XAG synthesis", "[oracle_synthesis]")
 {
 	auto oracle = xag_network();
 	auto a = oracle.create_pi();
@@ -29,12 +26,11 @@ TEMPLATE_PRODUCT_TEST_CASE("Simple XAG synthesis",
 	auto a_and_b = oracle.create_and(a, b);
 	oracle.create_po(a_and_b);
 
-	TestType quantum_ntk;
-	xag_synth(quantum_ntk, oracle);
+	Circuit circuit(nullptr);
+	xag_synth(circuit, oracle);
 }
 
-TEMPLATE_PRODUCT_TEST_CASE("Simple XAG synthesis 2",
-    "[oracle_synthesis][template]", (CircuitDAG), (w3_op))
+TEST_CASE("Simple XAG synthesis 2", "[oracle_synthesis]")
 {
 	auto oracle = xag_network();
 	auto a = oracle.create_pi();
@@ -51,11 +47,11 @@ TEMPLATE_PRODUCT_TEST_CASE("Simple XAG synthesis 2",
 	auto n6 = oracle.create_xor(n2, n5);
 	oracle.create_po(n6);
 
-	TestType quantum_ntk;
-	xag_synth(quantum_ntk, oracle);
+	Circuit circuit(nullptr);
+	xag_synth(circuit, oracle);
 
 	auto out_network
-	    = to_logic_network<mockturtle::xag_network>(quantum_ntk);
+	    = to_logic_network<mockturtle::xag_network>(circuit);
 	const auto miter
 	    = *mockturtle::miter<mockturtle::xag_network>(oracle, out_network);
 	const auto result = mockturtle::equivalence_checking(miter);
@@ -63,8 +59,7 @@ TEMPLATE_PRODUCT_TEST_CASE("Simple XAG synthesis 2",
 	CHECK(*result);
 }
 
-TEMPLATE_PRODUCT_TEST_CASE("Simple XAG synthesis 3",
-    "[oracle_synthesis][template]", (CircuitDAG), (w3_op))
+TEST_CASE("Simple XAG synthesis 3", "[oracle_synthesis]")
 {
 	/* Test includeness */
 	auto oracle = mockturtle::xag_network();
@@ -86,10 +81,10 @@ TEMPLATE_PRODUCT_TEST_CASE("Simple XAG synthesis 3",
 	oracle.create_po(oracle.get_constant(false));
 	oracle.create_po(x3 ^ 1);
 
-	TestType quantum_ntk;
-	xag_synth(quantum_ntk, oracle);
+	Circuit circuit(nullptr);
+	xag_synth(circuit, oracle);
 	auto out_network
-	    = to_logic_network<mockturtle::xag_network>(quantum_ntk);
+	    = to_logic_network<mockturtle::xag_network>(circuit);
 	CHECK(out_network.num_pis() == 5u);
 	CHECK(out_network.num_pos() == 5u);
 

@@ -4,6 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
+#include "../../ir/Circuit.h"
 #include "../../ir/Unitary.h"
 
 namespace tweedledum {
@@ -13,13 +14,12 @@ namespace tweedledum {
  * Needless to say that this method is not scalable at all! But its good to
  * equivalent check small examples and test cases.
  *
- * \tparam Circuit0, Circuit1 the circuit types.
- * \param[in] circuit0, circuit1 the circuits that will be check for
- * equivalence. \param[in] rtol Relative tolerance. \param[in] atol Absolute
- * tolerance. \returns true if the circuits are equivalent.
+ * \param[in] circuit0, circuit1 the circuits that will be check for equivalence.
+ * \param[in] rtol Relative tolerance.
+ * \param[in] atol Absolute tolerance.
+ * \returns true if the circuits are equivalent.
  */
-template<typename Circuit0, typename Circuit1>
-bool unitary_verify(Circuit0 const& circuit0, Circuit1 const& circuit1,
+inline bool unitary_verify(Circuit const& circuit0, Circuit const& circuit1,
     double const rtol = 1e-05, double const atol = 1e-08)
 {
 	Unitary u0(circuit0);

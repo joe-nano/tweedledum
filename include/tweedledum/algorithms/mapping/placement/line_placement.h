@@ -4,6 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
+#include "../../../ir/Circuit.h"
 #include "../../../ir/Storage.h"
 #include "../../../ir/Wire.h"
 #include "../../../target/Device.h"
@@ -12,21 +13,20 @@
 
 namespace tweedledum::detail {
 
-template<typename Network>
 class line_placer {
-	using op_type = typename Network::op_type;
-	using node_type = typename Network::node_type;
+	using op_type = typename Circuit::op_type;
+	using node_type = typename Circuit::node_type;
 	using pair_type = std::pair<uint32_t, uint32_t>;
 
 public:
-	line_placer(Network const& network, Device const& device)
-	    : network_(network), device_(device), v_degree_(num_v(), 0u),
+	line_placer(Circuit const& circuit, Device const& device)
+	    : circuit_(circuit), device_(device), v_degree_(num_v(), 0u),
 	      phy_degree_(num_phy(), 0u),
-	      wire_to_v_(network_.num_wires(), wire::invalid_id),
+	      wire_to_v_(circuit_.num_wires(), wire::invalid_id),
 	      phy_to_v_(num_phy(), wire::invalid_id), timeframes_(1u)
 	{
 		uint32_t v = 0u;
-		network.foreach_wire([&](wire::Id id) {
+		circuit.foreach_wire([&](wire::Id id) {
 			if (id.is_qubit()) {
 				wire_to_v_.at(id) = wire::make_qubit(v);
 				++v;
@@ -55,7 +55,7 @@ private:
 	// Returns tht number of *virtual* qubits.
 	uint32_t num_v() const
 	{
-		return network_.num_qubits();
+		return circuit_.num_qubits();
 	}
 
 	// Returns tht number of *physical* qubits.
@@ -70,19 +70,19 @@ private:
 	// "vertical" partitions of gates which can be executed simultaneously.
 	void partition_into_timeframes()
 	{
-		network_.clear_values();
-		network_.foreach_op(
+		circuit_.clear_values();
+		circuit_.foreach_op(
 		    [&](op_type const& op, node_type const& node) {
 			    uint32_t max_timeframe = 0u;
-			    network_.foreach_child(
+			    circuit_.foreach_child(
 			        node, [&](node_type const& child) {
 				        max_timeframe = std::max(max_timeframe,
-				            network_.value(child));
+				            circuit_.value(child));
 			        });
 			    if (op.is_one_qubit()) {
-				    network_.value(node, max_timeframe);
+				    circuit_.value(node, max_timeframe);
 			    } else {
-				    network_.value(node, ++max_timeframe);
+				    circuit_.value(node, ++max_timeframe);
 				    uint32_t const control
 				        = wire_to_v_.at(op.control());
 				    uint32_t const target
@@ -94,7 +94,7 @@ private:
 				        .emplace_back(control, target);
 			    }
 		    });
-		network_.clear_values();
+		circuit_.clear_values();
 	}
 
 	// Iterate over the timesteps to construct a graph whose vertices are
@@ -229,7 +229,7 @@ private:
 	}
 
 private:
-	Network const& network_;
+	Circuit const& circuit_;
 	Device const& device_;
 
 	std::vector<uint32_t> v_degree_;
@@ -243,15 +243,14 @@ private:
 
 // From
 // https://drops.dagstuhl.de/opus/volltexte/2019/10397/pdf/LIPIcs-TQC-2019-5.pdf:
-// Side effect: clear node values in the network
+// Side effect: clear node values in the circuit
 
 /*! \brief Yet to be written.
  */
-template<typename Network>
-std::vector<wire::Id> line_placement(
-    Network const& network, Device const& device)
+inline std::vector<wire::Id> line_placement(
+    Circuit const& circuit, Device const& device)
 {
-	line_placer placer(network, device);
+	line_placer placer(circuit, device);
 	return placer.place();
 }
 

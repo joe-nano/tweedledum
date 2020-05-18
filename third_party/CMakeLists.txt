@@ -51,6 +51,11 @@ else()
   target_include_directories(nlohmann_json INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/nlohmann)
 endif()
 
+if (NOT TARGET parallel_hashmap)
+  add_library(parallel_hashmap INTERFACE)
+  target_include_directories(parallel_hashmap INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/parallel_hashmap)
+endif()
+
 if (NOT TARGET percy)
   add_library(percy INTERFACE)
   target_include_directories(percy SYSTEM INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/percy)

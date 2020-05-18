@@ -12,7 +12,6 @@ set(tweedledum_tests_files
   "${CMAKE_CURRENT_SOURCE_DIR}/unit/run_tests.cpp"
   "${CMAKE_CURRENT_SOURCE_DIR}/unit/algorithms/decomposition/barenco.cpp"
   "${CMAKE_CURRENT_SOURCE_DIR}/unit/algorithms/decomposition/decompose.cpp"
-  "${CMAKE_CURRENT_SOURCE_DIR}/unit/algorithms/utility/to_logic_network.cpp"
   "${CMAKE_CURRENT_SOURCE_DIR}/unit/algorithms/mapping/placement/line_placement.cpp"
   "${CMAKE_CURRENT_SOURCE_DIR}/unit/algorithms/mapping/placement/random_placement.cpp"
   "${CMAKE_CURRENT_SOURCE_DIR}/unit/algorithms/mapping/placement/hsat_placement.cpp"
@@ -33,7 +32,8 @@ set(tweedledum_tests_files
   "${CMAKE_CURRENT_SOURCE_DIR}/unit/algorithms/synthesis/swap_network.cpp"
   "${CMAKE_CURRENT_SOURCE_DIR}/unit/algorithms/synthesis/tbs.cpp"
   "${CMAKE_CURRENT_SOURCE_DIR}/unit/algorithms/utility/asap_reschedule.cpp"
-  "${CMAKE_CURRENT_SOURCE_DIR}/unit/ir/CircuitDAG.cpp"
+  "${CMAKE_CURRENT_SOURCE_DIR}/unit/algorithms/utility/to_logic_network.cpp"
+  "${CMAKE_CURRENT_SOURCE_DIR}/unit/ir/Circuit.cpp"
   "${CMAKE_CURRENT_SOURCE_DIR}/unit/ir/Gate.cpp"
   "${CMAKE_CURRENT_SOURCE_DIR}/unit/ir/Networks.cpp"
   "${CMAKE_CURRENT_SOURCE_DIR}/unit/ir/Unitary.cpp"
@@ -41,6 +41,7 @@ set(tweedledum_tests_files
   "${CMAKE_CURRENT_SOURCE_DIR}/unit/ir/operations/operations.cpp"
   "${CMAKE_CURRENT_SOURCE_DIR}/unit/support/Angle.cpp"
   "${CMAKE_CURRENT_SOURCE_DIR}/unit/views/LayersView.cpp"
+  "${CMAKE_CURRENT_SOURCE_DIR}/unit/writers/write_qasm.cpp"
   )
 
 add_executable(run_tests "${tweedledum_tests_files}")

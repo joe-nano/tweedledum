@@ -4,6 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
+#include "../../ir/Circuit.h"
 #include "../../ir/Gate.h"
 #include "../../ir/Wire.h"
 #include "../../support/Angle.h"
@@ -25,8 +26,7 @@ namespace detail {
 // Barenco, A., Bennett, C.H., Cleve, R., DiVincenzo, D.P., Margolus, N., Shor,
 // P., Sleator, T., Smolin, J.A. and Weinfurter, H., 1995. Elementary gates for
 // quantum computation. Physical review A, 52(5), p.3457.
-template <class Circuit>
-void barenco_decomp(Circuit& circuit, Gate const& g,
+inline void barenco_decomp(Circuit& circuit, Gate const& g,
     std::vector<wire::Id> const& controls, wire::Id target,
     barenco_params const& params)
 {
@@ -131,20 +131,18 @@ void barenco_decomp(Circuit& circuit, Gate const& g,
  * controls into gates with at most ``controls_threshold`` controls. This may
  * introduce one additional helper qubit called ancilla.
  *
- * \tparam Circuit the circuit type.
  * \param[in] original the original quantum circuit (__will not be modified__).
  * \returns a decomposed circuit.
  */
-template <typename Circuit>
-Circuit barenco_decomposition(Circuit const circuit, barenco_params params = {})
+inline Circuit barenco_decomposition(Circuit const circuit, barenco_params params = {})
 {
 	using op_type = typename Circuit::op_type;
 	Circuit result = shallow_duplicate(circuit);
 	circuit.foreach_op([&](op_type const& op) {
 		if (op.is_one_qubit()) {
-			result.create_op(op, op.target());
+			result.create_op(op.gate(), op.target());
 		} else if (op.is_two_qubit()) {
-			result.create_op(op, op.control(), op.target());
+			result.create_op(op.gate(), op.control(), op.target());
 		} else {
 			std::vector<wire::Id> controls;
 			std::vector<wire::Id> targets;
@@ -155,7 +153,7 @@ Circuit barenco_decomposition(Circuit const circuit, barenco_params params = {})
 				targets.push_back(target);
 			});
 			detail::barenco_decomp(
-			    result, op, controls, targets.at(0), params);
+			    result, op.gate(), controls, targets.at(0), params);
 		}
 	});
 	return result;

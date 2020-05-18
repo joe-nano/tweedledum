@@ -4,7 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #include "tweedledum/ir/Unitary.h"
 
-#include "tweedledum/ir/CircuitDAG.h"
+#include "tweedledum/ir/Circuit.h"
 #include "tweedledum/ir/Gate.h"
 #include "tweedledum/ir/Wire.h"
 
@@ -12,7 +12,7 @@
 
 using namespace tweedledum;
 
-TEST_CASE("Basic unitary functionality", "[unitary][networks]")
+TEST_CASE("Basic unitary functionality", "[unitary]")
 {
 	SECTION("An empty unitary")
 	{

@@ -4,11 +4,10 @@
 *-----------------------------------------------------------------------------*/
 #include "tweedledum/algorithms/synthesis/gray_synth.h"
 
-#include "tweedledum/ir/CircuitDAG.h"
+#include "tweedledum/ir/Circuit.h"
 #include "tweedledum/ir/Gate.h"
-#include "tweedledum/ir/Netlist.h"
-#include "tweedledum/ir/operations/w3_op.h"
-#include "tweedledum/ir/operations/wn32_op.h"
+#include "tweedledum/ir/Module.h"
+#include "tweedledum/ir/Operation.h"
 #include "tweedledum/support/Angle.h"
 #include "tweedledum/support/ParityMap.h"
 
@@ -16,10 +15,10 @@
 
 using namespace tweedledum;
 
-TEMPLATE_PRODUCT_TEST_CASE("Gray synthesis", "[gray_synth][template]",
-    (CircuitDAG, Netlist), (wn32_op, w3_op))
+TEST_CASE("Gray synthesis", "[gray_synth]")
 {
-	using op_type = typename TestType::op_type;
+	using op_type = typename Circuit::op_type;
+	Module module;
 	SECTION("Check simple example from Amy paper")
 	{
 		ParityMap<uint32_t> parities;
@@ -30,13 +29,14 @@ TEMPLATE_PRODUCT_TEST_CASE("Gray synthesis", "[gray_synth][template]",
 		parities.add_term(0b1011, sym_angle::pi_quarter);
 		parities.add_term(0b0011, sym_angle::pi_quarter);
 
-		auto network = gray_synth<TestType>(4, parities);
+		gray_synth(module, 4, parities);
+		Circuit& circuit = module.circuit_;
 		BitMatrixRM id_matrix(4, 4);
 		id_matrix.foreach_row([](auto& row, const auto row_index) {
 			row[row_index] = 1;
 		});
 
-		network.foreach_op([&](op_type const& op) {
+		circuit.foreach_op([&](op_type const& op) {
 			if (op.is(gate_ids::cx)) {
 				id_matrix.row(op.target())
 				    ^= id_matrix.row(op.control());
@@ -46,8 +46,9 @@ TEMPLATE_PRODUCT_TEST_CASE("Gray synthesis", "[gray_synth][template]",
 
 	SECTION("Check with empty parities")
 	{
-		auto network = gray_synth<TestType>(4, {});
-		CHECK(network.num_operations() == 0u);
-		CHECK(network.num_qubits() == 4u);
+		gray_synth(module, 4, {});
+		Circuit& circuit = module.circuit_;
+		CHECK(circuit.num_operations() == 0u);
+		CHECK(circuit.num_qubits() == 4u);
 	}
 }

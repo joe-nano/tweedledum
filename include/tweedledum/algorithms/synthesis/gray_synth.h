@@ -4,6 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
+#include "../../ir/Circuit.h"
 #include "../../ir/Gate.h"
 #include "../../ir/Wire.h"
 #include "../../support/BitMatrixCM.h"
@@ -30,7 +31,6 @@ struct gray_synth_params {
 
 namespace detail {
 
-template<class Circuit>
 class gray_synth_ftor {
 	using matrix_type = BitMatrixCM<uint32_t>;
 	using qubit_pair_type = std::pair<uint32_t, uint32_t>;
@@ -188,7 +188,7 @@ private:
 		return qubits_.size();
 	}
 
-	auto select_row(std::vector<uint32_t> const& selected_columns,
+	uint32_t select_row(std::vector<uint32_t> const& selected_columns,
 	    DynamicBitset<uint32_t> const& remaining_rows)
 	{
 		assert(remaining_rows.count() > 0);
@@ -236,8 +236,7 @@ private:
  * synthesize \param params   The parameters that configure the
  * synthesis process. See `gray_synth_params` for details.
  */
-template<class Circuit>
-void gray_synth(Circuit& circuit, std::vector<wire::Id> const& qubits,
+inline void gray_synth(Circuit& circuit, std::vector<wire::Id> const& qubits,
     ParityMap<uint32_t> const& parities, gray_synth_params params = {})
 {
 	assert(qubits.size() <= 32u);
@@ -268,18 +267,15 @@ void gray_synth(Circuit& circuit, std::vector<wire::Id> const& qubits,
  * \algexpects List of parities and rotation angles to synthesize
  * \algreturns {CNOT, Rz} circuit
  */
-template<class Circuit>
-Circuit gray_synth(uint32_t num_qubits, ParityMap<uint32_t> const& parities,
-    gray_synth_params params = {})
+inline void gray_synth(Module& module, uint32_t num_qubits,
+    ParityMap<uint32_t> const& parities, gray_synth_params params = {})
 {
 	assert(num_qubits <= 32);
-	Circuit circuit;
 	std::vector<wire::Id> qubits;
 	for (uint32_t i = 0u; i < num_qubits; ++i) {
-		qubits.emplace_back(circuit.create_qubit());
+		qubits.emplace_back(module.circuit_.create_qubit());
 	}
-	gray_synth(circuit, qubits, parities, params);
-	return circuit;
+	gray_synth(module.circuit_, qubits, parities, params);
 }
 
 } // namespace tweedledum

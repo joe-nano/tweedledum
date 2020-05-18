@@ -4,7 +4,9 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
+#include "../../ir/Circuit.h"
 #include "../../ir/Gate.h"
+#include "../../ir/Module.h"
 #include "../../ir/Wire.h"
 #include "../../support/BitMatrixRM.h"
 #include "../../support/DynamicBitset.h"
@@ -18,7 +20,7 @@
 namespace tweedledum {
 namespace detail {
 
-template<class Circuit, class Matrix>
+template<class Matrix>
 class CnotPatel {
 	using matrix_type = Matrix;
 	using qubit_pair_type = std::pair<uint32_t, uint32_t>;
@@ -209,7 +211,7 @@ struct cnot_patel_params {
  * \param params  The parameters that configure the synthesis process.
  *                See `cnot_patel_params` for details.
  */
-template<class Circuit, class Matrix>
+template<class Matrix>
 void cnot_patel(Circuit& circuit, std::vector<wire::Id> const& qubits,
     Matrix const& matrix, cnot_patel_params params = {})
 {
@@ -274,7 +276,7 @@ void cnot_patel(Circuit& circuit, std::vector<wire::Id> const& qubits,
       parameters.allow_rewiring = false;
       parameters.best_partition_size = false;
       parameters.partition_size = 2u;
-      auto circuit = cnot_patel<Netlist<io3_gate>>(matrix, parameters);
+      auto circuit = cnot_patel(matrix, parameters);
 
    \endverbatim
  *
@@ -286,21 +288,19 @@ void cnot_patel(Circuit& circuit, std::vector<wire::Id> const& qubits,
  * \algexpects Linear matrix
  * \algreturns {CNOT} circuit
  */
-template<class Circuit, class Matrix>
-Circuit cnot_patel(Matrix const& matrix, cnot_patel_params params = {})
+template<class Matrix>
+void cnot_patel(Module* module, Matrix const& matrix, cnot_patel_params params = {})
 {
 	assert(matrix.is_square());
 	assert(params.best_partition_size
 	       || (params.partition_size >= 1 && params.partition_size <= 32));
 
-	Circuit circuit;
 	const uint32_t num_qubits = matrix.num_rows();
 	std::vector<wire::Id> qubits;
 	for (uint32_t i = 0u; i < num_qubits; ++i) {
-		qubits.emplace_back(circuit.create_qubit());
+		qubits.emplace_back(module->circuit_.create_qubit());
 	}
-	cnot_patel(circuit, qubits, matrix, params);
-	return circuit;
+	cnot_patel(module->circuit_, qubits, matrix, params);
 }
 
 } // namespace tweedledum

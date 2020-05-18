@@ -4,6 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
+#include "../../../ir/Circuit.h"
 #include "../../../ir/Wire.h"
 #include "../../../target/Device.h"
 
@@ -12,22 +13,22 @@
 
 namespace tweedledum::detail {
 
-template<typename Network, typename Solver>
+template<typename Solver>
 class place_cnf_encoder {
 	using lbool_type = bill::lbool_type;
 	using lit_type = bill::lit_type;
 	using var_type = bill::var_type;
-	using op_type = typename Network::op_type;
+	using op_type = typename Circuit::op_type;
 
 public:
 	place_cnf_encoder(
-	    Network const& network, Device const& device, Solver& solver)
-	    : network_(network), device_(device),
+	    Circuit const& circuit, Device const& device, Solver& solver)
+	    : circuit_(circuit), device_(device),
 	      pairs_(
-	          network_.num_qubits() * (network_.num_qubits() + 1) / 2, 0u),
-	      solver_(solver), wire_to_v_(network.num_wires(), wire::invalid_id)
+	          circuit_.num_qubits() * (circuit_.num_qubits() + 1) / 2, 0u),
+	      solver_(solver), wire_to_v_(circuit.num_wires(), wire::invalid_id)
 	{
-		network.foreach_wire([&](wire::Id id) {
+		circuit.foreach_wire([&](wire::Id id) {
 			if (id.is_qubit()) {
 				wire_to_v_.at(id)
 				    = wire::make_qubit(v_to_wire_.size());
@@ -40,7 +41,7 @@ public:
 	{
 		solver_.add_variables(num_v() * num_phy());
 		qubits_constraints();
-		network_.foreach_op([&](op_type const& op) {
+		circuit_.foreach_op([&](op_type const& op) {
 			if (!op.is_two_qubit()) {
 				return;
 			}
@@ -63,7 +64,7 @@ public:
 	std::vector<wire::Id> decode(std::vector<lbool_type> const& model)
 	{
 		std::vector<wire::Id> mapping(
-		    network_.num_qubits(), wire::invalid_id);
+		    circuit_.num_qubits(), wire::invalid_id);
 		for (uint32_t v_qid = 0; v_qid < num_v(); ++v_qid) {
 			for (uint32_t phy_qid = 0; phy_qid < num_phy();
 			     ++phy_qid) {
@@ -99,7 +100,7 @@ private:
 
 	uint32_t num_v() const
 	{
-		return network_.num_qubits();
+		return circuit_.num_qubits();
 	}
 
 	void qubits_constraints()
@@ -167,7 +168,7 @@ private:
 
 private:
 	// Problem data
-	Network const& network_;
+	Circuit const& circuit_;
 	Device const& device_;
 	std::vector<uint32_t> pairs_;
 
@@ -182,11 +183,10 @@ private:
 
 /*! \brief Yet to be written.
  */
-template<typename Network>
-std::vector<wire::Id> sat_place(Network const& network, Device const& device)
+inline std::vector<wire::Id> sat_place(Circuit const& circuit, Device const& device)
 {
 	bill::solver solver;
-	place_cnf_encoder encoder(network, device, solver);
+	place_cnf_encoder encoder(circuit, device, solver);
 	return encoder.run();
 }
 

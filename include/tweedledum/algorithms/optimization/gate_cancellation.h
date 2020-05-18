@@ -4,6 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
+#include "../../ir/Circuit.h"
 #include "../../ir/Gate.h"
 #include "../../ir/Node.h"
 #include "../../ir/Wire.h"
@@ -17,8 +18,7 @@ namespace tweedledum {
 /*! \brief Cancellation of consecutive adjoint gates.
  */
 // TODO: still feels a bit hacky
-template<typename Circuit>
-Circuit gate_cancellation(Circuit const circuit)
+inline Circuit gate_cancellation(Circuit const circuit)
 {
 	using op_type = typename Circuit::op_type;
 	using node_type = typename Circuit::node_type;

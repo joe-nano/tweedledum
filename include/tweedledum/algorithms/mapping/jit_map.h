@@ -4,6 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
+#include "../../ir/Circuit.h"
 #include "../../ir/MappedDAG.h"
 #include "../../ir/Wire.h"
 #include "../../target/Device.h"
@@ -17,11 +18,10 @@ namespace tweedledum {
 
 /*! \brief Yet to be written.
  */
-template<typename Circuit>
-MappedDAG jit_map(
+inline MappedDAG jit_map(
     Circuit const original, Device const& device, jit_config const& config = {})
 {
-	detail::jit_router<Circuit> router(device, config);
+	detail::jit_router router(device, config);
 	auto reversed = reverse(original);
 	std::vector<wire::Id> placement
 	    = detail::line_placement(reversed, device);

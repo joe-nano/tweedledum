@@ -4,6 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
+#include "../../ir/Circuit.h"
 #include "../../ir/Gate.h"
 #include "../../ir/Wire.h"
 #include "../../support/Angle.h"
@@ -30,7 +31,6 @@ struct decomp_params {
 #pragma region Decomposition circuit builder(detail)
 namespace detail {
 
-template<typename Circuit>
 class decomp_builder : public Circuit {
 public:
 	using op_type = typename Circuit::op_type;
@@ -386,11 +386,9 @@ private:
 
 /*! \brief
  *
- * \tparam Circuit the circuit type.
  * \param[in] circuit the original quantum circuit (__will not be modified__).
  * \returns a decomposed circuit.
  */
-template<typename Circuit>
 Circuit decompose(Circuit const circuit, decomp_params params = {})
 {
 	using op_type = typename Circuit::op_type;
@@ -399,9 +397,9 @@ Circuit decompose(Circuit const circuit, decomp_params params = {})
 
 	circuit.foreach_op([&](op_type const& op) {
 		if (op.is_one_qubit()) {
-			decomp.create_op(op, op.target());
+			decomp.create_op(op.gate(), op.target());
 		} else if (op.is_two_qubit()) {
-			decomp.create_op(op, op.control(), op.target());
+			decomp.create_op(op.gate(), op.control(), op.target());
 		} else {
 			std::vector<wire::Id> controls;
 			std::vector<wire::Id> targets;
@@ -411,7 +409,7 @@ Circuit decompose(Circuit const circuit, decomp_params params = {})
 			op.foreach_target([&](wire::Id target) {
 				targets.push_back(target);
 			});
-			decomp.create_op(op, controls, targets);
+			decomp.create_op(op.gate(), controls, targets);
 		}
 	});
 	return result;

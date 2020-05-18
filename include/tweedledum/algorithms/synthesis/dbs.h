@@ -4,7 +4,8 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
-#include "../../ir/Netlist.h"
+#include "../../ir/Circuit.h"
+#include "../../ir/Module.h"
 #include "../../ir/Wire.h"
 
 #include <algorithm>
@@ -105,7 +106,7 @@ inline auto control_function_abs(
    .. code-block:: c++
 
       std::vector<uint32_t> permutation{{0, 2, 3, 5, 7, 1, 4, 6}};
-      auto circuit = dbs<Netlist<io3_gate>>(permutation, stg_from_spectrum());
+      auto circuit = dbs(permutation, stg_from_spectrum());
 
    \endverbatim
  *
@@ -117,11 +118,11 @@ inline auto control_function_abs(
  * \algexpects Permutation
  * \algreturns Quantum or reversible circuit
  */
-template<class Circuit, class STGSynthesisFn>
-Circuit dbs(std::vector<uint32_t> permutation, STGSynthesisFn&& stg_synth,
+template<class STGSynthesisFn>
+void dbs(Module& module, std::vector<uint32_t> permutation, STGSynthesisFn&& stg_synth,
     dbs_params params = {})
 {
-	Circuit circuit;
+	Circuit& circuit = module.circuit_;
 	const uint32_t num_qubits = std::log2(permutation.size());
 	for (auto i = 0u; i < num_qubits; ++i) {
 		circuit.create_qubit();
@@ -152,20 +153,8 @@ Circuit dbs(std::vector<uint32_t> permutation, STGSynthesisFn&& stg_synth,
 	}
 
 	for (auto const& [tt, vars] : gates) {
-		if (params.verbose) {
-			std::cout
-			    << "[i] synthesize " << kitty::to_hex(tt)
-			    << " onto "
-			    << std::accumulate(vars.begin() + 1, vars.end(),
-			           std::to_string(vars.front()),
-			           [](auto const& a, auto v) {
-				           return a + ", " + std::to_string(v);
-			           })
-			    << "\n";
-		}
 		stg_synth(circuit, vars, tt);
 	}
-	return circuit;
 }
 
 } // namespace tweedledum

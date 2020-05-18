@@ -4,30 +4,28 @@
 *-----------------------------------------------------------------------------*/
 #include "tweedledum/algorithms/synthesis/cnot_patel.h"
 
-#include "tweedledum/ir/CircuitDAG.h"
+#include "tweedledum/ir/Circuit.h"
 #include "tweedledum/ir/Gate.h"
-#include "tweedledum/ir/Netlist.h"
-#include "tweedledum/ir/operations/w3_op.h"
-#include "tweedledum/ir/operations/wn32_op.h"
+#include "tweedledum/ir/Operation.h"
 #include "tweedledum/support/BitMatrixRM.h"
 
 #include <catch.hpp>
 
 using namespace tweedledum;
 
-TEMPLATE_PRODUCT_TEST_CASE("CNOT patel synthesis", "[cnot_patel][template]",
-    (CircuitDAG, Netlist), (wn32_op, w3_op))
+TEST_CASE("CNOT patel synthesis", "[cnot_patel]")
 {
-	using op_type = typename TestType::op_type;
+	using op_type = typename Circuit::op_type;
 	std::vector<uint32_t> rows
 	    = {0b000011, 0b011001, 0b010010, 0b111111, 0b111011, 0b011100};
 	BitMatrixRM matrix(6, rows);
+	Module module;
 	SECTION("Check example from paper")
 	{
 		cnot_patel_params parameters;
 		parameters.best_partition_size = false;
 		parameters.partition_size = 2u;
-		auto network = cnot_patel<TestType>(matrix, parameters);
+		cnot_patel(&module, matrix, parameters);
 
 		// Simulate CNOTs in network
 		BitMatrixRM id_matrix(6, 6);
@@ -35,7 +33,8 @@ TEMPLATE_PRODUCT_TEST_CASE("CNOT patel synthesis", "[cnot_patel][template]",
 			row[row_index] = 1;
 		});
 
-		network.foreach_op([&](op_type const& op) {
+		Circuit& circuit = module.circuit_;
+		circuit.foreach_op([&](op_type const& op) {
 			if (!op.is(gate_ids::cx)) {
 				return;
 			}

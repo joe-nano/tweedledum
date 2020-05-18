@@ -4,6 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
+#include "../../ir/Circuit.h"
 #include "../../ir/Wire.h"
 #include "../../support/Angle.h"
 #include "../../support/ParityMap.h"
@@ -34,7 +35,6 @@ struct stg_from_exact_esop {
 	 * \param qubits   The subset of qubits the gate acts upon.
 	 * \param function
 	 */
-	template<class Circuit>
 	void operator()(Circuit& circuit, std::vector<wire::Id> const& qubits,
 	    kitty::dynamic_truth_table const& function) const
 	{
@@ -65,7 +65,21 @@ struct stg_from_exact_esop {
 				bits >>= 1;
 				mask >>= 1;
 			}
-			circuit.create_op(GateLib::ncx, controls, target);
+			switch (controls.size()) {
+			case 0:
+				circuit.create_op(GateLib::x, controls, target);
+				break;
+
+			case 1:
+				circuit.create_op(
+				    GateLib::cx, controls, target);
+				break;
+
+			default:
+				circuit.create_op(
+				    GateLib::ncx, controls, target);
+				break;
+			}
 		}
 	}
 };
@@ -83,7 +97,6 @@ struct stg_from_pkrm {
 	 * \param qubits   The subset of qubits the gate acts upon.
 	 * \param function
 	 */
-	template<class Circuit>
 	void operator()(Circuit& circuit, std::vector<wire::Id> const& qubits,
 	    kitty::dynamic_truth_table const& function) const
 	{
@@ -107,7 +120,21 @@ struct stg_from_pkrm {
 				bits >>= 1;
 				mask >>= 1;
 			}
-			circuit.create_op(GateLib::ncx, controls, target);
+			switch (controls.size()) {
+			case 0:
+				circuit.create_op(GateLib::x, controls, target);
+				break;
+
+			case 1:
+				circuit.create_op(
+				    GateLib::cx, controls, target);
+				break;
+
+			default:
+				circuit.create_op(
+				    GateLib::ncx, controls, target);
+				break;
+			}
 		}
 	}
 };
@@ -126,7 +153,6 @@ struct stg_from_pprm {
 	 * \param qubits   The subset of qubits the gate acts upon.
 	 * \param function
 	 */
-	template<class Circuit>
 	void operator()(Circuit& circuit, std::vector<wire::Id> const& qubits,
 	    kitty::dynamic_truth_table const& function) const
 	{
@@ -145,7 +171,21 @@ struct stg_from_pprm {
 				}
 				bits >>= 1;
 			}
-			circuit.create_op(GateLib::ncx, controls, target);
+			switch (controls.size()) {
+			case 0:
+				circuit.create_op(GateLib::x, controls, target);
+				break;
+
+			case 1:
+				circuit.create_op(
+				    GateLib::cx, controls, target);
+				break;
+
+			default:
+				circuit.create_op(
+				    GateLib::ncx, controls, target);
+				break;
+			}
 		}
 	}
 };
@@ -175,7 +215,6 @@ struct stg_from_spectrum {
 	 * \param qubits   The subset of qubits the gate acts upon.
 	 * \param function
 	 */
-	template<class Circuit>
 	void operator()(Circuit& circuit, std::vector<wire::Id> const& qubits,
 	    kitty::dynamic_truth_table const& function) const
 	{

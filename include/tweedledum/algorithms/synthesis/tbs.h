@@ -4,7 +4,8 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
-#include "../../ir/Netlist.h"
+#include "../../ir/Circuit.h"
+#include "../../ir/Module.h"
 #include "../../ir/Wire.h"
 
 #include <cmath>
@@ -97,8 +98,7 @@ inline void update_permutation_inv(
 	}
 }
 
-template<typename Circuit>
-void tbs_unidirectional(Circuit& circuit, std::vector<wire::Id> const& qubits,
+inline void tbs_unidirectional(Circuit& circuit, std::vector<wire::Id> const& qubits,
     std::vector<uint32_t>& permutation)
 {
 	std::vector<std::pair<uint32_t, uint32_t>> gates;
@@ -129,8 +129,7 @@ void tbs_unidirectional(Circuit& circuit, std::vector<wire::Id> const& qubits,
 	}
 }
 
-template<typename Circuit>
-void tbs_bidirectional(Circuit& circuit, std::vector<wire::Id> const& qubits,
+inline void tbs_bidirectional(Circuit& circuit, std::vector<wire::Id> const& qubits,
     std::vector<uint32_t>& permutation)
 {
 	std::list<std::pair<uint32_t, uint32_t>> gates;
@@ -179,8 +178,7 @@ void tbs_bidirectional(Circuit& circuit, std::vector<wire::Id> const& qubits,
 	}
 }
 
-template<typename Circuit>
-void tbs_multidirectional(Circuit& circuit, std::vector<wire::Id> const& qubits,
+inline void tbs_multidirectional(Circuit& circuit, std::vector<wire::Id> const& qubits,
     std::vector<uint32_t>& permutation, tbs_params params = {})
 {
 	std::list<std::pair<uint32_t, uint32_t>> gates;
@@ -279,7 +277,7 @@ void tbs(Circuit& circuit, std::vector<wire::Id> const& qubits,
    .. code-block:: c++
 
       std::vector<uint32_t> permutation{{0, 2, 3, 5, 7, 1, 4, 6}};
-      auto circuit = tbs<Netlist<io3_gate>>(permutation);
+      auto circuit = tbs(permutation);
 
    \endverbatim
  *
@@ -290,17 +288,14 @@ void tbs(Circuit& circuit, std::vector<wire::Id> const& qubits,
  * \algexpects Permutation
  * \algreturns Reversible circuit
  */
-template<typename Circuit>
-Circuit tbs(std::vector<uint32_t> permutation, tbs_params params = {})
+inline void tbs(Module& module, std::vector<uint32_t> permutation, tbs_params params = {})
 {
-	Circuit circuit;
 	const uint32_t num_qubits = std::log2(permutation.size());
 	std::vector<wire::Id> qubits;
 	for (uint32_t i = 0u; i < num_qubits; ++i) {
-		qubits.emplace_back(circuit.create_qubit());
+		qubits.emplace_back(module.circuit_.create_qubit());
 	}
-	tbs(circuit, qubits, permutation, params);
-	return circuit;
+	tbs(module.circuit_, qubits, permutation, params);
 }
 
 } // namespace tweedledum

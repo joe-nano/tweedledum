@@ -4,6 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
+#include "../../ir/Circuit.h"
 #include "../../ir/Wire.h"
 #include "../../support/Angle.h"
 #include "../../support/ParityMap.h"
@@ -44,8 +45,7 @@ inline void fast_hadamard_transform(std::vector<Angle>& angles)
  * \param qubits The subset of qubits the linear reversible circuit acts upon
  * \param angles Angles for diagonal matrix elements
  */
-template<class Circuit>
-void diagonal_synth(Circuit& circuit, std::vector<wire::Id> qubits,
+inline void diagonal_synth(Circuit& circuit, std::vector<wire::Id> qubits,
     std::vector<Angle> const& angles)
 {
 	// Number of angles + 1 needs to be a power of two!
@@ -119,21 +119,18 @@ void diagonal_synth(Circuit& circuit, std::vector<wire::Id> qubits,
  * \algexpects List of angles in diagonal unitary matrix
  * \algreturns {CNOT, Rz} circuit
  */
-template<class Circuit>
-Circuit diagonal_synth(std::vector<Angle> const& angles)
+inline void diagonal_synth(Module& module, std::vector<Angle> const& angles)
 {
 	// Number of angles + 1 needs to be a power of two!
 	assert(!angles.empty() && !(angles.size() & (angles.size() - 1)));
 	uint32_t num_qubits = __builtin_ctz(angles.size());
 	assert(num_qubits <= 32u);
 
-	Circuit circuit;
 	std::vector<wire::Id> qubits;
 	for (uint32_t i = 0u; i < num_qubits; ++i) {
-		qubits.emplace_back(circuit.create_qubit());
+		qubits.emplace_back(module.circuit_.create_qubit());
 	}
-	diagonal_synth(circuit, qubits, angles);
-	return circuit;
+	diagonal_synth(module.circuit_, qubits, angles);
 }
 
 } // namespace tweedledum

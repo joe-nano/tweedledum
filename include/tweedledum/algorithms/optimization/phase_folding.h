@@ -4,6 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
+#include "../../ir/Circuit.h"
 #include "../../ir/Gate.h"
 #include "../../ir/Wire.h"
 #include "../../support/Angle.h"
@@ -20,14 +21,13 @@ namespace tweedledum {
  * This algorithm merges phase gates that are applied to the same computational
  * paths.
  */
-template<typename Circuit>
-Circuit phase_folding(Circuit const original)
+inline Circuit phase_folding(Circuit const original)
 {
 	using op_type = typename Circuit::op_type;
 	using sum_type = std::vector<uint32_t>;
 	constexpr uint32_t qid_max = std::numeric_limits<uint32_t>::max();
 
-	Circuit optimized;
+	Circuit optimized(original.module());
 	uint32_t num_path_vars = 1u;
 	std::vector<uint32_t> wire_to_qid(original.num_wires(), qid_max);
 	std::vector<sum_type> qubit_pathsum;
@@ -125,7 +125,7 @@ Circuit phase_folding(Circuit const original)
 		if (rot_angle == sym_angle::zero) {
 			return;
 		}
-		optimized.create_op(GateLib::rz(rot_angle), op.target());
+		optimized.create_op(GateLib::identified_r1(rot_angle), op.target());
 	});
 	return optimized;
 }

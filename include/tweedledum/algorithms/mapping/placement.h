@@ -4,6 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
+#include "../../ir/Circuit.h"
 #include "../../ir/Wire.h"
 #include "../../target/Device.h"
 #include "placement/hsat_placement.h"
@@ -30,8 +31,7 @@ struct placement_config {
 
 /*! \brief Yet to be written.
  */
-template<typename Circuit>
-std::vector<wire::Id> placement(
+inline std::vector<wire::Id> placement(
     Circuit const circuit, device const& device, placement_config params = {})
 {
 	using methods = placement_config::methods;
