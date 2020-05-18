@@ -33,11 +33,11 @@ inline MappedDAG sat_map(Circuit const original, Device const& device)
 	original.foreach_op([&](op_type const& op) {
 		wire::Id const phy0 = v_to_phy.at(wire_to_v.at(op.target()));
 		if (op.is_one_qubit()) {
-			mapped.create_op(op, phy0);
+			mapped.create_op(op.gate(), phy0);
 		} else if (op.is_two_qubit()) {
 			wire::Id const phy1
 			    = v_to_phy.at(wire_to_v.at(op.control()));
-			mapped.create_op(op, phy1, phy0);
+			mapped.create_op(op.gate(), phy1, phy0);
 		}
 	});
 	return mapped;

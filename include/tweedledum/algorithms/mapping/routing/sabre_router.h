@@ -171,8 +171,8 @@ private:
 				continue;
 			}
 			if (op.is_one_qubit()) {
-				add_op(op, op.target());
-			} else if (!try_add_op(op, op.control(), op.target())) {
+				add_op(op.gate(), op.target());
+			} else if (!try_add_op(op.gate(), op.control(), op.target())) {
 				new_front_layer.push_back(n_id);
 				involved_phy_.at(wire_to_phy(op.control()))
 				    = 1u;

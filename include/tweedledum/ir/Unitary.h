@@ -138,9 +138,9 @@ public:
 		using op_type = typename Network::op_type;
 		network.foreach_op([&](op_type const& op) {
 			if (op.is_one_qubit()) {
-				create_op(op, op.target());
+				create_op(op.gate(), op.target());
 			} else if (op.is_two_qubit()) {
-				create_op(op, op.control(), op.target());
+				create_op(op.gate(), op.control(), op.target());
 			} else {
 				std::vector<wire::Id> controls;
 				std::vector<wire::Id> targets;
@@ -150,7 +150,7 @@ public:
 				op.foreach_target([&](wire::Id target) {
 					targets.push_back(target);
 				});
-				create_op(op, controls, targets);
+				create_op(op.gate(), controls, targets);
 			}
 		});
 	}

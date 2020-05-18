@@ -140,9 +140,9 @@ inline Circuit barenco_decomposition(Circuit const circuit, barenco_params param
 	Circuit result = shallow_duplicate(circuit);
 	circuit.foreach_op([&](op_type const& op) {
 		if (op.is_one_qubit()) {
-			result.create_op(op, op.target());
+			result.create_op(op.gate(), op.target());
 		} else if (op.is_two_qubit()) {
-			result.create_op(op, op.control(), op.target());
+			result.create_op(op.gate(), op.control(), op.target());
 		} else {
 			std::vector<wire::Id> controls;
 			std::vector<wire::Id> targets;
@@ -153,7 +153,7 @@ inline Circuit barenco_decomposition(Circuit const circuit, barenco_params param
 				targets.push_back(target);
 			});
 			detail::barenco_decomp(
-			    result, op, controls, targets.at(0), params);
+			    result, op.gate(), controls, targets.at(0), params);
 		}
 	});
 	return result;

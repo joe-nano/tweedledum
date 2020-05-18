@@ -13,7 +13,7 @@
 
 namespace tweedledum {
 
-class Operation : public Gate {
+class Operation {
 	void init_one_wire(wire::Id const t)
 	{
 		assert(t.is_qubit() && t != wire::invalid_id
@@ -83,14 +83,14 @@ class Operation : public Gate {
 
 public:
 	Operation(Gate const& g, wire::Id const t)
-	    : Gate(g), num_controls_(0), num_targets_(1), wires_(1u, t.wire())
+	    : gate_(g), num_controls_(0), num_targets_(1), wires_(1u, t.wire())
 	{
 		assert(t != wire::invalid_id && !t.is_complemented());
 		assert(is_meta() || (is_one_qubit() && t.is_qubit()));
 	}
 
 	Operation(Gate const& g, wire::Id const w0, wire::Id const w1)
-	    : Gate(g), num_controls_(1u), num_targets_(1u),
+	    : gate_(g), num_controls_(1u), num_targets_(1u),
 	      wires_(2u, wire::invalid_id)
 	{
 		init_two_wire(w0, w1);
@@ -98,7 +98,7 @@ public:
 
 	Operation(Gate const& g, wire::Id const c0, wire::Id const c1,
 	    wire::Id const t)
-	    : Gate(g), num_controls_(2u), num_targets_(1u),
+	    : gate_(g), num_controls_(2u), num_targets_(1u),
 	      wires_(3u, wire::invalid_id)
 	{
 		init_three_wire(c0, c1, t);
@@ -106,7 +106,7 @@ public:
 
 	Operation(Gate const& g, std::vector<wire::Id> const& cs,
 	    std::vector<wire::Id> const& ts)
-	    : Gate(g), num_controls_(cs.size()), num_targets_(ts.size()),
+	    : gate_(g), num_controls_(cs.size()), num_targets_(ts.size()),
 	      wires_(num_controls_ + num_targets_, wire::invalid_id)
 	{
 		assert(ts.size() >= 1u
@@ -138,6 +138,76 @@ public:
 			wires_.at(num_controls()) = ts.at(0);
 			break;
 		}
+	}
+
+	gate_ids id() const
+	{
+		return gate_.id();
+	}
+
+	bool is(gate_ids gid) const
+	{
+		return id() == gid;
+	}
+
+	bool is_adjoint(Gate const& other) const
+	{
+		return gate_.is_adjoint(other);
+	}
+
+	bool is_meta() const
+	{
+		return gate_.is_meta();
+	}
+
+	bool is_one_qubit() const
+	{
+		return gate_.is_one_qubit();
+	}
+
+	bool is_two_qubit() const
+	{
+		return gate_.is_two_qubit();
+	}
+
+	bool is_r1() const
+	{
+		return gate_.is_r1();
+	}
+
+	bool is_measurement() const
+	{
+		return gate_.is_measurement();
+	}
+
+	rot_axis axis() const
+	{
+		return gate_.axis();
+	}
+
+	Angle rotation_angle() const
+	{
+		return gate_.rotation_angle();
+	}
+
+	Angle theta() const
+	{
+		return gate_.theta();
+	}
+
+	Angle phi() const
+	{
+		return gate_.phi();
+	}
+
+	Angle lambda() const
+	{
+		return gate_.lambda();
+	}
+
+	Gate const& gate() const
+	{
+		return gate_;
 	}
 
 	uint32_t num_wires() const
@@ -188,7 +258,7 @@ public:
 	{
 		assert(!is_meta() && !other.is_meta());
 		assert(!is_measurement() && !other.is_measurement());
-		if (_gate().is_adjoint(other) == false) {
+		if (gate_.is_adjoint(other.gate_) == false) {
 			return false;
 		}
 		if (num_controls() != other.num_controls()) {
@@ -293,7 +363,7 @@ public:
 
 	bool operator==(Operation const& other) const
 	{
-		if (_gate() != other._gate()) {
+		if (gate_ != other.gate_) {
 			return false;
 		}
 		if (num_controls() != other.num_controls()) {
@@ -306,11 +376,7 @@ public:
 	}
 
 private:
-	Gate const& _gate() const
-	{
-		return static_cast<Gate const&>(*this);
-	}
-
+	Gate gate_;
 	// TODO: eventually this will have to be a pointer to either a gate or
 	//       a gate defined as a subscircuit, unitary matrix, etc...
 	// I think the concept of Gate will need to be more abstract
