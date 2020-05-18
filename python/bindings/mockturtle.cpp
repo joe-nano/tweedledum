@@ -19,11 +19,12 @@ void xag_simulate(xag_network ntk)
 		fmt::print("{}\n", kitty::to_binary(result));
 	}
 }
+} // namespace mockturtle
 
-PYBIND11_MODULE(mockturtle, m)
+void init_mockturtle(pybind11::module& m)
 {
+	using namespace mockturtle;
 	namespace py = pybind11;
-	m.doc() = "Mockturtles's XAG Network";
 
 	m.def("simulate", &xag_simulate, "A function simulate a XAG");
 
@@ -48,4 +49,3 @@ PYBIND11_MODULE(mockturtle, m)
 	    .def("num_pos", &xag_network::num_pos);
 }
 
-} // namespace mockturtle

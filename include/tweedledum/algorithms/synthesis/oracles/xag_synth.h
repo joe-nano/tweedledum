@@ -513,14 +513,13 @@ void xag_synth(Circuit& circuit, mockturtle::xag_network const& xag_ntk,
 	synthesizer.synthesize();
 }
 
-// /*! \brief Oracle synthesis from a XAG graph (from mockturtle) */
-// template<class Circuit>
-// Circuit xag_synth(
-//     mockturtle::xag_network const& xag_ntk, xag_synth_params const& params = {})
-// {
-// 	Circuit circuit;
-// 	xag_synth(circuit, xag_ntk, params);
-// 	return circuit;
-// }
+/*! \brief Oracle synthesis from a XAG graph (from mockturtle) */
+Circuit xag_synth(
+    mockturtle::xag_network const& xag_ntk, xag_synth_params const& params = {})
+{
+	Circuit circuit(nullptr);
+	xag_synth(circuit, xag_ntk, params);
+	return circuit;
+}
 
 } // namespace tweedledum
