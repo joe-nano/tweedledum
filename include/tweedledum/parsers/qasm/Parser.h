@@ -174,15 +174,24 @@ private:
 	void parse_gate_statement()
 	{
 		// If we get here, then an identifier was matched
-		expect_and_consume_token(Token::Kinds::identifier);
+		std::string_view name
+		    = expect_and_consume_token(Token::Kinds::identifier);
+		AbstractGate const* gate = module_->gate_lib_.lookup(name);
 		if (try_and_consume_token(Token::Kinds::l_paren)) {
 			if (!try_and_consume_token(Token::Kinds::r_paren)) {
 				parse_explist();
 				expect_and_consume_token(Token::Kinds::r_paren);
 			}
 		}
-		parse_anylist();
+		std::vector<wire::Id> qubits;
+		do {
+			qubits.push_back(parse_argument());
+			if (!try_and_consume_token(Token::Kinds::comma)) {
+				break;
+			}
+		} while (1);
 		expect_and_consume_token(Token::Kinds::semicolon);
+		gate->create_op(module_->circuit_, qubits, {});
 		return;
 	}
 #pragma endregion
@@ -195,21 +204,6 @@ private:
 	{
 		do {
 			expect_and_consume_token(Token::Kinds::identifier);
-			if (!try_and_consume_token(Token::Kinds::comma)) {
-				break;
-			}
-		} while (1);
-	}
-
-	/*! \brief Parse a list of arguments (<anylist>) */
-	// <anylist> = <idlist> | <mixedlist>
-	// <mixedlist> = <id> [ <nninteger> ] | <mixedlist> , <id>
-	//             | <mixedlist> , <id> [ <nninteger> ]
-	//             | <idlist> , <id>[ <nninteger> ]
-	void parse_anylist()
-	{
-		do {
-			parse_argument();
 			if (!try_and_consume_token(Token::Kinds::comma)) {
 				break;
 			}
@@ -370,14 +364,17 @@ private:
 	/*! \brief Parse an argument (<argument>) */
 	// <argument> = <id>
 	//            | <id> [ <nninteger> ]
-	void parse_argument()
+	wire::Id parse_argument()
 	{
-		expect_and_consume_token(Token::Kinds::identifier);
+		std::string_view name = expect_and_consume_token(Token::Kinds::identifier);
 		if (!try_and_consume_token(Token::Kinds::l_square)) {
-			return;
+			// TODO
+			return wire::invalid_id;
 		}
-		expect_and_consume_token(Token::Kinds::nninteger);
+		uint32_t idx = expect_and_consume_token(Token::Kinds::nninteger);
 		expect_and_consume_token(Token::Kinds::r_square);
+		wire::Id result = module_->circuit_.wire(fmt::format("{}_{}", name, idx));
+		return result;
 	}
 
 	void parse_cnot()
