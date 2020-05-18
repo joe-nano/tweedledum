@@ -4,7 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
-#include "CircuitDAG.h"
+#include "Circuit.h"
 #include "Gate.h"
 #include "GateLib.h"
 
@@ -18,7 +18,7 @@ public:
 		register_gates(gate_lib_);
 	}
 
-	CircuitDAG circuit_;
+	Circuit circuit_;
 	GateLib2 gate_lib_;
 	phmap::node_hash_set<Gate> gates_;
 };

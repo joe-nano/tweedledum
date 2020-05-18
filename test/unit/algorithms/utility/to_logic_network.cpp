@@ -4,7 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #include "tweedledum/algorithms/utility/to_logic_network.h"
 
-#include "tweedledum/ir/CircuitDAG.h"
+#include "tweedledum/ir/Circuit.h"
 #include "tweedledum/ir/Operation.h"
 #include "tweedledum/ir/Wire.h"
 
@@ -20,7 +20,7 @@ using namespace tweedledum;
 
 TEST_CASE("Conver simple quantum circuit to XAG", "[to_logic_network]")
 {
-	CircuitDAG circuit(nullptr);
+	Circuit circuit(nullptr);
 	wire::Id q0 = circuit.create_qubit("__i_0", wire::Mode::in);
 	wire::Id q1 = circuit.create_qubit("__i_1", wire::Mode::in);
 	wire::Id q2 = circuit.create_qubit("__o_0", wire::Mode::out);

@@ -4,7 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #include "tweedledum/algorithms/synthesis/diagonal_synth.h"
 
-#include "tweedledum/ir/CircuitDAG.h"
+#include "tweedledum/ir/Circuit.h"
 #include "tweedledum/ir/Gate.h"
 #include "tweedledum/ir/Module.h"
 #include "tweedledum/ir/Operation.h"

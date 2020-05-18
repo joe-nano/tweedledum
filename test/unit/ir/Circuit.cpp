@@ -2,7 +2,7 @@
 | Part of the tweedledum.  This file is distributed under the MIT License.
 | See accompanying file /LICENSE for details.
 *-----------------------------------------------------------------------------*/
-#include "tweedledum/ir/CircuitDAG.h"
+#include "tweedledum/ir/Circuit.h"
 
 #include "tweedledum/ir/Gate.h"
 #include "tweedledum/ir/Module.h"
@@ -14,11 +14,11 @@
 
 using namespace tweedledum;
 
-TEST_CASE("Operations DAG 'foreach_input' iterator", "[CircuitDAG]")
+TEST_CASE("Operations DAG 'foreach_input' iterator", "[Circuit]")
 {
-	using node_type = typename CircuitDAG::node_type;
+	using node_type = typename Circuit::node_type;
 	Module module;
-	CircuitDAG& circuit = module.circuit_;
+	Circuit& circuit = module.circuit_;
 	SECTION("Input iterator")
 	{
 		circuit.create_qubit();
@@ -73,11 +73,11 @@ TEST_CASE("Operations DAG 'foreach_input' iterator", "[CircuitDAG]")
 	}
 }
 
-TEST_CASE("Operations 'foreach_output' iterator", "[CircuitDAG]")
+TEST_CASE("Operations 'foreach_output' iterator", "[Circuit]")
 {
-	using node_type = typename CircuitDAG::node_type;
+	using node_type = typename Circuit::node_type;
 	Module module;
-	CircuitDAG& circuit = module.circuit_;
+	Circuit& circuit = module.circuit_;
 	wire::Id q0 = circuit.create_qubit();
 	wire::Id q1 = circuit.create_qubit();
 	wire::Id q2 = circuit.create_qubit();

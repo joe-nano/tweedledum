@@ -5,7 +5,7 @@
 #include "tweedledum/algorithms/synthesis/tbs.h"
 
 #include "tweedledum/algorithms/simulation/simulate_classically.h"
-#include "tweedledum/ir/CircuitDAG.h"
+#include "tweedledum/ir/Circuit.h"
 #include "tweedledum/ir/Module.h"
 #include "tweedledum/ir/Operation.h"
 
@@ -21,7 +21,7 @@ TEST_CASE("Transformation based synthesis", "[tbs]")
 	SECTION("Synthesize PRIME(3) - unidirectional TBS")
 	{
 		tbs(module, permutation);
-		CircuitDAG& circuit = module.circuit_;
+		Circuit& circuit = module.circuit_;
 		for (auto i = 0u; i < permutation.size(); ++i) {
 			CHECK(
 			    simulate_classically(circuit, i) == permutation[i]);
@@ -32,7 +32,7 @@ TEST_CASE("Transformation based synthesis", "[tbs]")
 		tbs_params params;
 		params.behavior = tbs_params::behavior::bidirectional;
 		tbs(module, permutation, params);
-		CircuitDAG& circuit = module.circuit_;
+		Circuit& circuit = module.circuit_;
 		for (auto i = 0u; i < permutation.size(); ++i) {
 			CHECK(
 			    simulate_classically(circuit, i) == permutation[i]);
@@ -43,7 +43,7 @@ TEST_CASE("Transformation based synthesis", "[tbs]")
 		tbs_params params;
 		params.behavior = tbs_params::behavior::multidirectional;
 		tbs(module, permutation, params);
-		CircuitDAG& circuit = module.circuit_;
+		Circuit& circuit = module.circuit_;
 		for (auto i = 0u; i < permutation.size(); ++i) {
 			CHECK(
 			    simulate_classically(circuit, i) == permutation[i]);

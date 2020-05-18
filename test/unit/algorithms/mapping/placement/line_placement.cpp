@@ -6,7 +6,7 @@
 
 #include "../test_circuits.h"
 #include "tweedledum/algorithms/verification/placement_verify.h"
-#include "tweedledum/ir/CircuitDAG.h"
+#include "tweedledum/ir/Circuit.h"
 #include "tweedledum/ir/Gate.h"
 #include "tweedledum/ir/MappedDAG.h"
 #include "tweedledum/ir/Operation.h"
@@ -20,7 +20,7 @@ using namespace tweedledum;
 
 TEST_CASE("Test for line intial placement heuristic", "[line_placement][mapping]")
 {
-	CircuitDAG circuit(nullptr);
+	Circuit circuit(nullptr);
 	SECTION("Empty circuit")
 	{
 		Device device = Device::path(circuit.num_qubits());

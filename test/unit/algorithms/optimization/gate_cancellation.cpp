@@ -5,7 +5,7 @@
 #include "tweedledum/algorithms/optimization/gate_cancellation.h"
 
 #include "tweedledum/algorithms/verification/unitary_verify.h"
-#include "tweedledum/ir/CircuitDAG.h"
+#include "tweedledum/ir/Circuit.h"
 #include "tweedledum/ir/Module.h"
 #include "tweedledum/ir/Operation.h"
 #include "tweedledum/ir/Wire.h"
@@ -18,7 +18,7 @@ using namespace tweedledum;
 TEST_CASE("Simple gate cancellations", "[gate_cancellation][opt]")
 {
 	Module module;
-	CircuitDAG& circuit = module.circuit_;
+	Circuit& circuit = module.circuit_;
 	SECTION("Single qubit gates")
 	{
 		wire::Id q0 = circuit.create_qubit("q0");
@@ -182,7 +182,7 @@ TEST_CASE("Simple gate cancellations", "[gate_cancellation][opt]")
 TEST_CASE("Even Sequences", "[gate_cancellation][opt]")
 {
 	Module module;
-	CircuitDAG& circuit = module.circuit_;
+	Circuit& circuit = module.circuit_;
 	SECTION("Even sequece of hadamards")
 	{
 		wire::Id q0 = circuit.create_qubit();
@@ -246,7 +246,7 @@ TEST_CASE("Even Sequences", "[gate_cancellation][opt]")
 TEST_CASE("Odd Sequences", "[gate_cancellation][opt]")
 {
 	Module module;
-	CircuitDAG& circuit = module.circuit_;
+	Circuit& circuit = module.circuit_;
 	SECTION("Odd sequece of hadamards")
 	{
 		wire::Id q0 = circuit.create_qubit();

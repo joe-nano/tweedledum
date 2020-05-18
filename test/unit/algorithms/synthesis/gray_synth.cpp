@@ -4,7 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #include "tweedledum/algorithms/synthesis/gray_synth.h"
 
-#include "tweedledum/ir/CircuitDAG.h"
+#include "tweedledum/ir/Circuit.h"
 #include "tweedledum/ir/Gate.h"
 #include "tweedledum/ir/Module.h"
 #include "tweedledum/ir/Operation.h"
@@ -17,7 +17,7 @@ using namespace tweedledum;
 
 TEST_CASE("Gray synthesis", "[gray_synth]")
 {
-	using op_type = typename CircuitDAG::op_type;
+	using op_type = typename Circuit::op_type;
 	Module module;
 	SECTION("Check simple example from Amy paper")
 	{
@@ -30,7 +30,7 @@ TEST_CASE("Gray synthesis", "[gray_synth]")
 		parities.add_term(0b0011, sym_angle::pi_quarter);
 
 		gray_synth(module, 4, parities);
-		CircuitDAG& circuit = module.circuit_;
+		Circuit& circuit = module.circuit_;
 		BitMatrixRM id_matrix(4, 4);
 		id_matrix.foreach_row([](auto& row, const auto row_index) {
 			row[row_index] = 1;
@@ -47,7 +47,7 @@ TEST_CASE("Gray synthesis", "[gray_synth]")
 	SECTION("Check with empty parities")
 	{
 		gray_synth(module, 4, {});
-		CircuitDAG& circuit = module.circuit_;
+		Circuit& circuit = module.circuit_;
 		CHECK(circuit.num_operations() == 0u);
 		CHECK(circuit.num_qubits() == 4u);
 	}

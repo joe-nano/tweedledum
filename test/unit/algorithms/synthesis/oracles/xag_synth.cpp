@@ -7,7 +7,7 @@
 #include "tweedledum/algorithms/synthesis/oracles/xag_synth.h"
 
 #include "tweedledum/algorithms/utility/to_logic_network.h"
-#include "tweedledum/ir/CircuitDAG.h"
+#include "tweedledum/ir/Circuit.h"
 #include "tweedledum/ir/Operation.h"
 
 #include <catch.hpp>
@@ -26,7 +26,7 @@ TEST_CASE("Simple XAG synthesis", "[oracle_synthesis]")
 	auto a_and_b = oracle.create_and(a, b);
 	oracle.create_po(a_and_b);
 
-	CircuitDAG circuit(nullptr);
+	Circuit circuit(nullptr);
 	xag_synth(circuit, oracle);
 }
 
@@ -47,7 +47,7 @@ TEST_CASE("Simple XAG synthesis 2", "[oracle_synthesis]")
 	auto n6 = oracle.create_xor(n2, n5);
 	oracle.create_po(n6);
 
-	CircuitDAG circuit(nullptr);
+	Circuit circuit(nullptr);
 	xag_synth(circuit, oracle);
 
 	auto out_network
@@ -81,7 +81,7 @@ TEST_CASE("Simple XAG synthesis 3", "[oracle_synthesis]")
 	oracle.create_po(oracle.get_constant(false));
 	oracle.create_po(x3 ^ 1);
 
-	CircuitDAG circuit(nullptr);
+	Circuit circuit(nullptr);
 	xag_synth(circuit, oracle);
 	auto out_network
 	    = to_logic_network<mockturtle::xag_network>(circuit);

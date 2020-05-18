@@ -18,22 +18,22 @@ class Module;
  * graph.
  *
  */
-class CircuitDAG {
+class Circuit {
 public:
 #pragma region Types and constructors
-	using base_type = CircuitDAG;
+	using base_type = Circuit;
 	using op_type = Operation;
 	using node_type = node::Irregular<op_type>;
 	using dstrg_type = Storage<node_type>;
 	using wstrg_type = wire::Storage;
 
-	CircuitDAG(Module* module)
+	Circuit(Module* module)
 	    : module_(module),
 	      data_(std::make_shared<dstrg_type>("tweedledum_op_graph")),
 	      wires_(std::make_shared<wstrg_type>())
 	{}
 
-	explicit CircuitDAG(Module* module, std::string_view name)
+	explicit Circuit(Module* module, std::string_view name)
 	    : module_(module),
 	      data_(std::make_shared<dstrg_type>(name)),
 	      wires_(std::make_shared<wstrg_type>())

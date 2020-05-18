@@ -5,7 +5,7 @@
 #include "tweedledum/algorithms/optimization/phase_folding.h"
 
 #include "tweedledum/algorithms/verification/unitary_verify.h"
-#include "tweedledum/ir/CircuitDAG.h"
+#include "tweedledum/ir/Circuit.h"
 #include "tweedledum/ir/Gate.h"
 #include "tweedledum/ir/Module.h"
 #include "tweedledum/ir/Operation.h"
@@ -17,7 +17,7 @@ using namespace tweedledum;
 TEST_CASE("Phase folding", "[phase_folding]")
 {
 	Module module;
-	CircuitDAG& circuit = module.circuit_;
+	Circuit& circuit = module.circuit_;
 	circuit.create_qubit("x1");
 	circuit.create_qubit("x2");
 	circuit.create_qubit("x3");

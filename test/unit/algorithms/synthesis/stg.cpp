@@ -5,7 +5,7 @@
 #include "tweedledum/algorithms/synthesis/stg.h"
 
 #include "tweedledum/algorithms/simulation/simulate_classically.h"
-#include "tweedledum/ir/CircuitDAG.h"
+#include "tweedledum/ir/Circuit.h"
 #include "tweedledum/ir/Module.h"
 #include "tweedledum/ir/Operation.h"
 #include "tweedledum/ir/Wire.h"
@@ -33,7 +33,7 @@ TEST_CASE("Single-target gate synthesis", "[stg]")
 {
 	Module module;
 	auto map = detail::circuit_and_map(module, 6u);
-	CircuitDAG& circuit = module.circuit_;
+	Circuit& circuit = module.circuit_;
 	SECTION("Synthesize using stg_from_pkrm")
 	{
 		kitty::dynamic_truth_table tt(5);

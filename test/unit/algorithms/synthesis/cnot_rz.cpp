@@ -4,7 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #include "tweedledum/algorithms/synthesis/cnot_rz.h"
 
-#include "tweedledum/ir/CircuitDAG.h"
+#include "tweedledum/ir/Circuit.h"
 #include "tweedledum/ir/Gate.h"
 #include "tweedledum/ir/Module.h"
 #include "tweedledum/ir/Operation.h"

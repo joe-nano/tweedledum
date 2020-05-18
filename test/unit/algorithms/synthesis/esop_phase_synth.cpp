@@ -4,7 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #include "tweedledum/algorithms/synthesis/esop_phase_synth.h"
 
-#include "tweedledum/ir/CircuitDAG.h"
+#include "tweedledum/ir/Circuit.h"
 #include "tweedledum/ir/Module.h"
 #include "tweedledum/ir/Operation.h"
 
@@ -18,14 +18,14 @@ using namespace tweedledum;
 
 TEST_CASE("Synthesize phase circuits", "[esop_phase_synth]")
 {
-	using op_type = typename CircuitDAG::op_type;
+	using op_type = typename Circuit::op_type;
 	for (uint32_t n = 2u; n <= 10u; ++n) {
 		for (uint32_t t = 0u; t <= 50u; ++t) {
 			kitty::dynamic_truth_table func(5u);
 			kitty::create_random(func, 17);
 			Module module;
 			esop_phase_synth(module, func);
-			CircuitDAG circuit = module.circuit_;
+			Circuit circuit = module.circuit_;
 			std::vector<kitty::cube> cubes;
 			circuit.foreach_op([&](op_type const& op) {
 				// CHECK(op.is(gate_ids::ncz));

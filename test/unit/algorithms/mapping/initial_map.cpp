@@ -4,7 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #include "tweedledum/algorithms/mapping/initial_map.h"
 
-#include "tweedledum/ir/CircuitDAG.h"
+#include "tweedledum/ir/Circuit.h"
 #include "tweedledum/ir/Gate.h"
 #include "tweedledum/ir/MappedDAG.h"
 #include "tweedledum/ir/Netlist.h"
@@ -17,7 +17,7 @@
 using namespace tweedledum;
 
 TEMPLATE_TEST_CASE("Test for SAT intial map heuristic",
-    "[initial_map][mapping]", (Netlist, CircuitDAG))
+    "[initial_map][mapping]", (Netlist, Circuit))
 {
 	TestType network;
 	initial_map_params params;
@@ -50,7 +50,7 @@ TEMPLATE_TEST_CASE("Test for SAT intial map heuristic",
 }
 
 TEMPLATE_TEST_CASE("Test for random intial map heuristic",
-    "[initial_map][mapping]", (Netlist, CircuitDAG))
+    "[initial_map][mapping]", (Netlist, Circuit))
 {
 	TestType network;
 	initial_map_params params;

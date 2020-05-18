@@ -2,15 +2,15 @@
 | Part of the tweedledum.  This file is distributed under the MIT License.
 | See accompanying file /LICENSE for details.
 *-----------------------------------------------------------------------------*/
-#include "tweedledum/ir/CircuitDAG.h"
+#include "tweedledum/ir/Circuit.h"
 #include "tweedledum/ir/Gate.h"
 #include "tweedledum/ir/Wire.h"
 
 using namespace tweedledum;
 
-inline CircuitDAG test_circuit_00()
+inline Circuit test_circuit_00()
 {
-	CircuitDAG circuit(nullptr);
+	Circuit circuit(nullptr);
 	wire::Id q0 = circuit.create_qubit();
 	circuit.create_cbit();
 	wire::Id q1 = circuit.create_qubit();
@@ -25,9 +25,9 @@ inline CircuitDAG test_circuit_00()
 }
 
 // Extend ZDD mapper paper example
-inline CircuitDAG test_circuit_01()
+inline Circuit test_circuit_01()
 {
-	CircuitDAG circuit(nullptr);
+	Circuit circuit(nullptr);
 	wire::Id q0 = circuit.create_qubit();
 	circuit.create_cbit();
 	wire::Id q1 = circuit.create_qubit();
@@ -53,9 +53,9 @@ inline CircuitDAG test_circuit_01()
 }
 
 // Extend ZDD mapper paper example #2
-inline CircuitDAG test_circuit_02()
+inline Circuit test_circuit_02()
 {
-	CircuitDAG circuit(nullptr);
+	Circuit circuit(nullptr);
 	wire::Id q0 = circuit.create_qubit();
 	circuit.create_cbit();
 	wire::Id q1 = circuit.create_qubit();
@@ -79,9 +79,9 @@ inline CircuitDAG test_circuit_02()
 }
 
 // Extend ZDD mapper paper example #3
-inline CircuitDAG test_circuit_03()
+inline Circuit test_circuit_03()
 {
-	CircuitDAG circuit(nullptr);
+	Circuit circuit(nullptr);
 	wire::Id q0 = circuit.create_qubit();
 	circuit.create_cbit();
 	wire::Id q1 = circuit.create_qubit();
@@ -110,9 +110,9 @@ inline CircuitDAG test_circuit_03()
 }
 
 // Extend ZDD mapper paper example #3.5
-inline CircuitDAG test_circuit_04()
+inline Circuit test_circuit_04()
 {
-	CircuitDAG circuit(nullptr);
+	Circuit circuit(nullptr);
 	wire::Id q0 = circuit.create_qubit();
 	circuit.create_cbit();
 	wire::Id q1 = circuit.create_qubit();
@@ -147,9 +147,9 @@ inline CircuitDAG test_circuit_04()
 }
 
 // Extend ZDD mapper paper #4
-inline CircuitDAG test_circuit_05()
+inline Circuit test_circuit_05()
 {
-	CircuitDAG circuit(nullptr);
+	Circuit circuit(nullptr);
 	wire::Id q0 = circuit.create_qubit();
 	circuit.create_cbit();
 	wire::Id q1 = circuit.create_qubit();
@@ -173,9 +173,9 @@ inline CircuitDAG test_circuit_05()
 	return circuit;
 }
 
-inline CircuitDAG test_circuit_06()
+inline Circuit test_circuit_06()
 {
-	CircuitDAG circuit(nullptr);
+	Circuit circuit(nullptr);
 	wire::Id q0 = circuit.create_qubit();
 	circuit.create_cbit();
 	wire::Id q1 = circuit.create_qubit();
@@ -196,9 +196,9 @@ inline CircuitDAG test_circuit_06()
 	return circuit;
 }
 
-inline CircuitDAG test_circuit_07()
+inline Circuit test_circuit_07()
 {
-	CircuitDAG circuit(nullptr);
+	Circuit circuit(nullptr);
 	wire::Id q0 = circuit.create_qubit();
 	circuit.create_cbit();
 	wire::Id q1 = circuit.create_qubit();

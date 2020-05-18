@@ -6,7 +6,7 @@
 
 #include "tweedledum/algorithms/simulation/simulate_classically.h"
 #include "tweedledum/algorithms/synthesis/stg.h"
-#include "tweedledum/ir/CircuitDAG.h"
+#include "tweedledum/ir/Circuit.h"
 #include "tweedledum/ir/Gate.h"
 #include "tweedledum/ir/Module.h"
 #include "tweedledum/ir/Operation.h"
@@ -21,7 +21,7 @@ TEST_CASE("Decomposition based synthesis", "[dbs]")
 	SECTION("Synthesize PRIME(3) - PPRM")
 	{
 		dbs(module, permutation, stg_from_pprm());
-		CircuitDAG circuit = module.circuit_;
+		Circuit circuit = module.circuit_;
 		for (auto i = 0u; i < permutation.size(); ++i) {
 			CHECK(
 			    simulate_classically(circuit, i) == permutation[i]);
@@ -30,7 +30,7 @@ TEST_CASE("Decomposition based synthesis", "[dbs]")
 	SECTION("Synthesize PRIME(3) - spectrum")
 	{
 		dbs(module, permutation, stg_from_spectrum());
-		CircuitDAG circuit = module.circuit_;
+		Circuit circuit = module.circuit_;
 		CHECK(circuit.num_operations() == 52u);
 		CHECK(circuit.num_qubits() == 3u);
 	}

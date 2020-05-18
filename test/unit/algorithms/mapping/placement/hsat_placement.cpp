@@ -6,7 +6,7 @@
 
 #include "../test_circuits.h"
 #include "tweedledum/algorithms/verification/placement_verify.h"
-#include "tweedledum/ir/CircuitDAG.h"
+#include "tweedledum/ir/Circuit.h"
 #include "tweedledum/ir/Gate.h"
 #include "tweedledum/ir/MappedDAG.h"
 #include "tweedledum/ir/Operation.h"
@@ -21,7 +21,7 @@ TEST_CASE("Test for SAT intial placement heuristic", "[hsat_placement][mapping]"
 {
 	SECTION("Empty circuit")
 	{
-		CircuitDAG circuit(nullptr);
+		Circuit circuit(nullptr);
 		Device device = Device::path(circuit.num_qubits());
 		std::vector<wire::Id> placement
 		    = detail::hsat_placement(circuit, device);
@@ -29,7 +29,7 @@ TEST_CASE("Test for SAT intial placement heuristic", "[hsat_placement][mapping]"
 	}
 	SECTION("Test circuit 00")
 	{
-		CircuitDAG circuit = test_circuit_00();
+		Circuit circuit = test_circuit_00();
 		Device device = Device::path(circuit.num_qubits());
 		std::vector<wire::Id> placement
 		    = detail::hsat_placement(circuit, device);
@@ -37,7 +37,7 @@ TEST_CASE("Test for SAT intial placement heuristic", "[hsat_placement][mapping]"
 	}
 	SECTION("Test circuit 01")
 	{
-		CircuitDAG circuit = test_circuit_01();
+		Circuit circuit = test_circuit_01();
 		Device device = Device::path(circuit.num_qubits());
 		std::vector<wire::Id> placement
 		    = detail::hsat_placement(circuit, device);
@@ -45,7 +45,7 @@ TEST_CASE("Test for SAT intial placement heuristic", "[hsat_placement][mapping]"
 	}
 	SECTION("Test circuit 02")
 	{
-		CircuitDAG circuit = test_circuit_02();
+		Circuit circuit = test_circuit_02();
 		Device device = Device::path(circuit.num_qubits());
 		std::vector<wire::Id> placement
 		    = detail::hsat_placement(circuit, device);
@@ -53,7 +53,7 @@ TEST_CASE("Test for SAT intial placement heuristic", "[hsat_placement][mapping]"
 	}
 	SECTION("Test circuit 03")
 	{
-		CircuitDAG circuit = test_circuit_03();
+		Circuit circuit = test_circuit_03();
 		Device device = Device::path(circuit.num_qubits());
 		std::vector<wire::Id> placement
 		    = detail::hsat_placement(circuit, device);
@@ -61,7 +61,7 @@ TEST_CASE("Test for SAT intial placement heuristic", "[hsat_placement][mapping]"
 	}
 	SECTION("Test circuit 04")
 	{
-		CircuitDAG circuit = test_circuit_04();
+		Circuit circuit = test_circuit_04();
 		Device device = Device::path(circuit.num_qubits());
 		std::vector<wire::Id> placement
 		    = detail::hsat_placement(circuit, device);
@@ -69,7 +69,7 @@ TEST_CASE("Test for SAT intial placement heuristic", "[hsat_placement][mapping]"
 	}
 	SECTION("Test circuit 05")
 	{
-		CircuitDAG circuit = test_circuit_05();
+		Circuit circuit = test_circuit_05();
 		Device device = Device::path(circuit.num_qubits());
 		std::vector<wire::Id> placement
 		    = detail::hsat_placement(circuit, device);
@@ -77,7 +77,7 @@ TEST_CASE("Test for SAT intial placement heuristic", "[hsat_placement][mapping]"
 	}
 	SECTION("Test circuit 06")
 	{
-		CircuitDAG circuit = test_circuit_06();
+		Circuit circuit = test_circuit_06();
 		Device device = Device::path(circuit.num_qubits());
 		std::vector<wire::Id> placement
 		    = detail::hsat_placement(circuit, device);
@@ -85,7 +85,7 @@ TEST_CASE("Test for SAT intial placement heuristic", "[hsat_placement][mapping]"
 	}
 	SECTION("Test circuit 07")
 	{
-		CircuitDAG circuit = test_circuit_07();
+		Circuit circuit = test_circuit_07();
 		Device device = Device::path(circuit.num_qubits());
 		std::vector<wire::Id> placement
 		    = detail::hsat_placement(circuit, device);

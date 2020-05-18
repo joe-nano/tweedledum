@@ -4,7 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
-#include "../../ir/CircuitDAG.h"
+#include "../../ir/Circuit.h"
 #include "../../ir/Module.h"
 #include "../../ir/Wire.h"
 
@@ -122,7 +122,7 @@ template<class STGSynthesisFn>
 void dbs(Module& module, std::vector<uint32_t> permutation, STGSynthesisFn&& stg_synth,
     dbs_params params = {})
 {
-	CircuitDAG& circuit = module.circuit_;
+	Circuit& circuit = module.circuit_;
 	const uint32_t num_qubits = std::log2(permutation.size());
 	for (auto i = 0u; i < num_qubits; ++i) {
 		circuit.create_qubit();

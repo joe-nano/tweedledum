@@ -21,7 +21,7 @@ namespace tweedledum {
  *
  * __NOTE__: This function requires a template parameter that cannot be
  * inferred.  This is useful when removing nodes and creating a different
- * circuit representation, e.g. `CircuitDAG` <-> `Netlist`
+ * circuit representation, e.g. `Circuit` <-> `Netlist`
  *
  * __NOTE__: Operation type _must_ be the same.
  *

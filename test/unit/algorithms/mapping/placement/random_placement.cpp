@@ -4,7 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #include "tweedledum/algorithms/mapping/placement/random_placement.h"
 
-#include "tweedledum/ir/CircuitDAG.h"
+#include "tweedledum/ir/Circuit.h"
 #include "tweedledum/ir/Gate.h"
 #include "tweedledum/ir/MappedDAG.h"
 #include "tweedledum/ir/Operation.h"
@@ -17,7 +17,7 @@ using namespace tweedledum;
 
 TEST_CASE("Test for random intial placement heuristic", "[random_placement][mapping]")
 {
-	CircuitDAG circuit(nullptr);
+	Circuit circuit(nullptr);
 	SECTION("Empty circuit")
 	{
 		Device device = Device::path(circuit.num_qubits());

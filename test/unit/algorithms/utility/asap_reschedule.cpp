@@ -6,7 +6,7 @@
 
 #include "tweedledum/algorithms/analysis/check_layered.h"
 #include "tweedledum/algorithms/verification/unitary_verify.h"
-#include "tweedledum/ir/CircuitDAG.h"
+#include "tweedledum/ir/Circuit.h"
 #include "tweedledum/ir/Gate.h"
 #include "tweedledum/ir/Node.h"
 #include "tweedledum/ir/Operation.h"
@@ -19,7 +19,7 @@ using namespace tweedledum;
 
 TEST_CASE("ASAP reschedule", "[asap_reschedule][utility]")
 {
-	CircuitDAG circuit(nullptr);
+	Circuit circuit(nullptr);
 	wire::Id const q0 = circuit.create_qubit();
 	wire::Id const q1 = circuit.create_qubit();
 	wire::Id const q2 = circuit.create_qubit();
@@ -30,7 +30,7 @@ TEST_CASE("ASAP reschedule", "[asap_reschedule][utility]")
 	circuit.create_op(GateLib::h, q2);
 	CHECK_FALSE(check_layered(circuit));
 
-	CircuitDAG rescheduled = asap_reschedule(circuit);
+	Circuit rescheduled = asap_reschedule(circuit);
 	CHECK(rescheduled.node(node::Id(4u)).op.is(gate_ids::h));
 	CHECK(check_layered(rescheduled));
 	CHECK(unitary_verify(circuit, rescheduled));

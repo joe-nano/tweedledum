@@ -4,7 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #include "tweedledum/views/LayersView.h"
 
-#include "tweedledum/ir/CircuitDAG.h"
+#include "tweedledum/ir/Circuit.h"
 #include "tweedledum/ir/Operation.h"
 #include "tweedledum/ir/Wire.h"
 
@@ -14,7 +14,7 @@ using namespace tweedledum;
 
 TEST_CASE("Layers view", "[LayersView][views]")
 {
-	CircuitDAG circuit(nullptr);
+	Circuit circuit(nullptr);
 	SECTION("Empty circuit")
 	{
 		LayersView layered_ntk(circuit);

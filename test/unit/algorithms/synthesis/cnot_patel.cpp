@@ -4,7 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #include "tweedledum/algorithms/synthesis/cnot_patel.h"
 
-#include "tweedledum/ir/CircuitDAG.h"
+#include "tweedledum/ir/Circuit.h"
 #include "tweedledum/ir/Gate.h"
 #include "tweedledum/ir/Operation.h"
 #include "tweedledum/support/BitMatrixRM.h"
@@ -15,7 +15,7 @@ using namespace tweedledum;
 
 TEST_CASE("CNOT patel synthesis", "[cnot_patel]")
 {
-	using op_type = typename CircuitDAG::op_type;
+	using op_type = typename Circuit::op_type;
 	std::vector<uint32_t> rows
 	    = {0b000011, 0b011001, 0b010010, 0b111111, 0b111011, 0b011100};
 	BitMatrixRM matrix(6, rows);
@@ -33,7 +33,7 @@ TEST_CASE("CNOT patel synthesis", "[cnot_patel]")
 			row[row_index] = 1;
 		});
 
-		CircuitDAG& circuit = module.circuit_;
+		Circuit& circuit = module.circuit_;
 		circuit.foreach_op([&](op_type const& op) {
 			if (!op.is(gate_ids::cx)) {
 				return;

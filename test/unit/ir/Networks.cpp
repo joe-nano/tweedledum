@@ -2,7 +2,7 @@
 | Part of the tweedledum.  This file is distributed under the MIT License.
 | See accompanying file /LICENSE for details.
 *-----------------------------------------------------------------------------*/
-#include "tweedledum/ir/CircuitDAG.h"
+#include "tweedledum/ir/Circuit.h"
 #include "tweedledum/ir/Gate.h"
 #include "tweedledum/ir/Module.h"
 #include "tweedledum/ir/Node.h"
@@ -16,7 +16,7 @@ using namespace tweedledum;
 TEST_CASE("Common functionality for all circuits", "[common][circuits]")
 {
 	Module module;
-	CircuitDAG& circuit = module.circuit_;
+	Circuit& circuit = module.circuit_;
 	SECTION("An empty circuit")
 	{
 		CHECK(circuit.size() == 0u);
@@ -100,7 +100,7 @@ TEST_CASE("One-qubit operations", "[one-qubit][circuits]")
 	        GateLib::s, GateLib::t, GateLib::sdg, GateLib::tdg};
 
 	Module module;
-	CircuitDAG& circuit = module.circuit_;
+	Circuit& circuit = module.circuit_;
 	wire::Id qubit = circuit.create_qubit("qubit_0");
 	SECTION("Using wire identifier")
 	{
@@ -131,7 +131,7 @@ TEST_CASE("Two-qubit operations", "[two-qubit][circuits]")
 	    = {GateLib::cx, GateLib::cy, GateLib::cz, GateLib::swap};
 
 	Module module;
-	CircuitDAG& circuit = module.circuit_;
+	Circuit& circuit = module.circuit_;
 	wire::Id q0 = circuit.create_qubit("__dum_q0");
 	wire::Id q1 = circuit.create_qubit("__dum_q1");
 	SECTION("Using wire identifier")
@@ -174,7 +174,7 @@ TEST_CASE("Three-qubit operations", "[three-qubit][circuits]")
 	std::vector<Gate> gates = {GateLib::ncx, GateLib::ncy, GateLib::ncz};
 
 	Module module;
-	CircuitDAG& circuit = module.circuit_;
+	Circuit& circuit = module.circuit_;
 	wire::Id q0 = circuit.create_qubit("__dum_q0");
 	wire::Id q1 = circuit.create_qubit("__dum_q1");
 	wire::Id q2 = circuit.create_qubit("q2");

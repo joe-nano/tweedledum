@@ -5,7 +5,7 @@
 #include "tweedledum/algorithms/decomposition/decompose.h"
 
 #include "tweedledum/algorithms/simulation/simulate_classically.h"
-#include "tweedledum/ir/CircuitDAG.h"
+#include "tweedledum/ir/Circuit.h"
 #include "tweedledum/ir/Gate.h"
 #include "tweedledum/ir/Module.h"
 #include "tweedledum/ir/Operation.h"
@@ -21,7 +21,7 @@ using namespace tweedledum;
 TEST_CASE("Decompose using barenco", "[decomp]")
 {
 	Module module;
-	CircuitDAG& circuit = module.circuit_;
+	Circuit& circuit = module.circuit_;
 	std::vector<wire::Id> qubits(5, wire::invalid_id);
 	std::generate(qubits.begin(), qubits.end(), [&]() {
 		return circuit.create_qubit();
@@ -42,7 +42,7 @@ TEST_CASE("Decompose using barenco", "[decomp]")
 	decomp_params params;
 	params.barenco_controls_threshold = 2u;
 	params.gate_set = gate_set::classic_rev;
-	CircuitDAG decomposed = decompose(circuit, params);
+	Circuit decomposed = decompose(circuit, params);
 	CHECK(decomposed.num_qubits() == circuit.num_qubits() + 1);
 
 	// Create ancilla
@@ -78,11 +78,11 @@ TEST_CASE("IBM", "[decomp]")
 	for (Gate const& g : one_wire) {
 		// Create quantum circuit
 		Module module;
-		CircuitDAG& circuit = module.circuit_;
+		Circuit& circuit = module.circuit_;
 		wire::Id q0 = circuit.create_qubit();
 		circuit.create_op(g, q0);
 		// Decompose
-		CircuitDAG decomposed = decompose(circuit, params);
+		Circuit decomposed = decompose(circuit, params);
 		// Create unitaries
 		Unitary u_decomp(circuit);
 		Unitary u(1u);
@@ -92,12 +92,12 @@ TEST_CASE("IBM", "[decomp]")
 	for (Gate const& g : two_wire) {
 		// Create quantum circuit
 		Module module;
-		CircuitDAG& circuit = module.circuit_;
+		Circuit& circuit = module.circuit_;
 		wire::Id q0 = circuit.create_qubit();
 		wire::Id q1 = circuit.create_qubit();
 		circuit.create_op(g, q0, q1);
 		// Decompose
-		CircuitDAG decomposed = decompose(circuit, params);
+		Circuit decomposed = decompose(circuit, params);
 		// Create unitaries
 		Unitary u_decomp(circuit);
 		Unitary u(2u);
