@@ -4,6 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
+#include "../../ir/Circuit.h"
 #include "../../ir/Gate.h"
 #include "../../ir/Module.h"
 #include "../../ir/Wire.h"
@@ -19,7 +20,7 @@
 namespace tweedledum {
 namespace detail {
 
-template<class Circuit, class Matrix>
+template<class Matrix>
 class CnotPatel {
 	using matrix_type = Matrix;
 	using qubit_pair_type = std::pair<uint32_t, uint32_t>;
@@ -210,7 +211,7 @@ struct cnot_patel_params {
  * \param params  The parameters that configure the synthesis process.
  *                See `cnot_patel_params` for details.
  */
-template<class Circuit, class Matrix>
+template<class Matrix>
 void cnot_patel(Circuit& circuit, std::vector<wire::Id> const& qubits,
     Matrix const& matrix, cnot_patel_params params = {})
 {

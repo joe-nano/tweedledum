@@ -4,6 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
+#include "../../ir/Circuit.h"
 #include "../../ir/Gate.h"
 #include "../../ir/Wire.h"
 
@@ -19,8 +20,7 @@ namespace tweedledum {
  * \algreturns The simulated pattern
  */
 // TODO: make it aware of rewiring
-template<typename Circuit>
-uint64_t simulate_classically(Circuit const circuit, uint64_t pattern)
+inline uint64_t simulate_classically(Circuit const circuit, uint64_t pattern)
 {
 	using op_type = typename Circuit::op_type;
 	assert(circuit.check_gate_set(gate_set::classic_rev));

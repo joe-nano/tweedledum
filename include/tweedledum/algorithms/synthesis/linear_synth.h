@@ -4,6 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
+#include "../../ir/Circuit.h"
 #include "../../ir/Gate.h"
 #include "../../ir/Module.h"
 #include "../../ir/Wire.h"
@@ -21,8 +22,7 @@
 namespace tweedledum {
 namespace detail {
 
-template<class Circuit>
-void linear_synth_binary(Circuit& circuit, std::vector<wire::Id> const& qubits,
+inline void linear_synth_binary(Circuit& circuit, std::vector<wire::Id> const& qubits,
     ParityMap<uint32_t> parities)
 {
 	const auto num_qubits = qubits.size();
@@ -70,8 +70,7 @@ void linear_synth_binary(Circuit& circuit, std::vector<wire::Id> const& qubits,
 	}
 }
 
-template<class Circuit>
-void linear_synth_gray(Circuit& circuit, std::vector<wire::Id> const& qubits,
+inline void linear_synth_gray(Circuit& circuit, std::vector<wire::Id> const& qubits,
     ParityMap<uint32_t> parities)
 {
 	const auto num_qubits = qubits.size();
@@ -145,8 +144,7 @@ struct linear_synth_params {
  * \param params   The parameters that configure the synthesis process.
  *                 See `linear_synth_params` for details.
  */
-template<class Circuit>
-void linear_synth(Circuit& circuit, std::vector<wire::Id> const& qubits,
+inline void linear_synth(Circuit& circuit, std::vector<wire::Id> const& qubits,
     ParityMap<uint32_t> const& parities, linear_synth_params params = {})
 {
 	assert(qubits.size() <= 32);

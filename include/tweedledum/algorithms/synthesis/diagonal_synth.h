@@ -4,6 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
+#include "../../ir/Circuit.h"
 #include "../../ir/Wire.h"
 #include "../../support/Angle.h"
 #include "../../support/ParityMap.h"
@@ -44,8 +45,7 @@ inline void fast_hadamard_transform(std::vector<Angle>& angles)
  * \param qubits The subset of qubits the linear reversible circuit acts upon
  * \param angles Angles for diagonal matrix elements
  */
-template<class Circuit>
-void diagonal_synth(Circuit& circuit, std::vector<wire::Id> qubits,
+inline void diagonal_synth(Circuit& circuit, std::vector<wire::Id> qubits,
     std::vector<Angle> const& angles)
 {
 	// Number of angles + 1 needs to be a power of two!

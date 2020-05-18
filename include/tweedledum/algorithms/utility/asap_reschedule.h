@@ -4,6 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
+#include "../../ir/Circuit.h"
 #include "../../ir/Node.h"
 #include "../../views/LayersView.h"
 #include "../utility/shallow_duplicate.h"
@@ -56,8 +57,7 @@ namespace tweedledum {
  * \param[in] original the original quantum circuit (__will not be modified__).
  * \returns a __new__ rescheduled (leyered) circuit.
  */
-template<typename Circuit>
-Circuit asap_reschedule(Circuit const original)
+inline Circuit asap_reschedule(Circuit const original)
 {
 	Circuit rescheduled = shallow_duplicate(original);
 	LayersView layers(original);

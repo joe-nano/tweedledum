@@ -4,6 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
+#include "../../ir/Circuit.h"
 #include "../../ir/MappedDAG.h"
 #include "../../ir/Wire.h"
 
@@ -26,17 +27,17 @@ using sum_type = std::vector<uint32_t>;
 // path literals can be placed correctly.
 template<typename Circuit>
 std::vector<sum_type> fake_pathsums(
-    Circuit const network, std::vector<wire::Id> const& init)
+    Circuit const circuit, std::vector<wire::Id> const& init)
 {
-	assert(init.size() == network.num_qubits());
+	assert(init.size() == circuit.num_qubits());
 	using node_type = typename Circuit::node_type;
 	using op_type = typename Circuit::op_type;
 	constexpr uint32_t qid_max = std::numeric_limits<uint32_t>::max();
 
-	std::vector<uint32_t> wire_to_qid(network.num_wires(), qid_max);
+	std::vector<uint32_t> wire_to_qid(circuit.num_wires(), qid_max);
 	std::vector<sum_type> fake_pathsum;
 
-	network.foreach_input([&](node_type const& node) {
+	circuit.foreach_input([&](node_type const& node) {
 		wire::Id w_id = node.op.target();
 		if (!w_id.is_qubit()) {
 			return;
@@ -44,7 +45,7 @@ std::vector<sum_type> fake_pathsums(
 		wire_to_qid.at(w_id) = fake_pathsum.size();
 		fake_pathsum.emplace_back(1u, init.at(fake_pathsum.size()));
 	});
-	network.foreach_op([&](op_type const& op) {
+	circuit.foreach_op([&](op_type const& op) {
 		if (!op.is_two_qubit()) {
 			return;
 		}
@@ -80,13 +81,11 @@ std::vector<sum_type> fake_pathsums(
  * NOTE: as it ignores one-qubit gates, this verification assumes that those
  * gates were correctly mapped!
  *
- * \tparam Circuit the circuit type.
  * \param[in] original the unmapped circuit.
  * \param[in] mapped the mapped version of the original circuit.
  * \returns true if the circuit is correctly mapped under the assumptions.
  */
-template<typename Circuit>
-bool map_verify(Circuit const original, MappedDAG const& mapped)
+inline bool map_verify(Circuit const original, MappedDAG const& mapped)
 {
 	std::vector<wire::Id> init_original(
 	    original.num_qubits(), wire::invalid_id);

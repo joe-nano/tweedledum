@@ -4,6 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
+#include "../../ir/Circuit.h"
 #include "../../ir/Gate.h"
 #include "../../ir/Module.h"
 #include "../../ir/Wire.h"
@@ -112,7 +113,6 @@ public:
 		++num_moments_;
 	}
 
-	template<class Circuit>
 	void decode(Circuit& circuit, std::vector<wire::Id> const& qubits,
 	    std::vector<lbool_type> const& model)
 	{
@@ -474,7 +474,7 @@ private:
 
 /*! \brief .
  */
-template<class Circuit, class Matrix>
+template<class Matrix>
 void cnot_rz(Circuit& circuit, std::vector<wire::Id> const& qubits,
     Matrix const& matrix, ParityMap<uint32_t> const& parities,
     cnot_rz_params params = {})
@@ -498,7 +498,6 @@ void cnot_rz(Circuit& circuit, std::vector<wire::Id> const& qubits,
 	} while (1);
 }
 
-template<class Circuit>
 void cnot_rz(Circuit& circuit, std::vector<wire::Id> const& qubits,
     ParityMap<uint32_t> const& parities, cnot_rz_params params = {})
 {

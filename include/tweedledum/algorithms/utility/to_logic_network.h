@@ -4,6 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
+#include "../../ir/Circuit.h"
 #include "../../ir/Gate.h"
 #include "../../ir/Wire.h"
 
@@ -18,12 +19,11 @@ namespace tweedledum {
  * quantum circuit contains a non-classical gate, it will return empty circuit,
  * otherwise an optional value that contains a logic network.
  *
- * \tparam Circuit the __quantum__ circuit type.
  * \tparam LogicNtk the __classical__ network type (from ``mockturtle``).
- * \param[in] circuit the original __quantum__ circuit (__will not be
- * modified__). \returns a mockturtle's logic network equivalent to the circuit.
+ * \param[in] circuit the original __quantum__ circuit (__will not be modified__).
+ * \returns a mockturtle's logic network equivalent to the circuit.
  */
-template<class LogicNtk, class Circuit>
+template<class LogicNtk>
 LogicNtk to_logic_network(Circuit const circuit)
 {
 	// clang-format off

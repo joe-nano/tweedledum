@@ -4,6 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
+#include "../../ir/Circuit.h"
 #include "../../ir/Gate.h"
 #include "../../ir/Wire.h"
 #include "../../support/Angle.h"
@@ -30,7 +31,6 @@ struct decomp_params {
 #pragma region Decomposition circuit builder(detail)
 namespace detail {
 
-template<typename Circuit>
 class decomp_builder : public Circuit {
 public:
 	using op_type = typename Circuit::op_type;
@@ -386,11 +386,9 @@ private:
 
 /*! \brief
  *
- * \tparam Circuit the circuit type.
  * \param[in] circuit the original quantum circuit (__will not be modified__).
  * \returns a decomposed circuit.
  */
-template<typename Circuit>
 Circuit decompose(Circuit const circuit, decomp_params params = {})
 {
 	using op_type = typename Circuit::op_type;

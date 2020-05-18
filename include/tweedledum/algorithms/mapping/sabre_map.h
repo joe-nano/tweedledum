@@ -4,6 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
+#include "../../ir/Circuit.h"
 #include "../../ir/MappedDAG.h"
 #include "../../ir/Wire.h"
 #include "../../target/Device.h"
@@ -23,11 +24,10 @@ namespace tweedledum {
 
    \endverbatim
  */
-template<typename Circuit>
-MappedDAG sabre_map(Circuit const original, Device const& device,
+inline MappedDAG sabre_map(Circuit const original, Device const& device,
     sabre_config const& config = {})
 {
-	detail::sabre_router<Circuit> router(device, config);
+	detail::sabre_router router(device, config);
 	std::vector<wire::Id> placement
 	    = detail::hsat_placement(original, device);
 	MappedDAG mapped = router.route(original, placement);

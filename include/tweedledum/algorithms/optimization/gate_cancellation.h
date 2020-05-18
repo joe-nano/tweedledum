@@ -18,7 +18,7 @@ namespace tweedledum {
 /*! \brief Cancellation of consecutive adjoint gates.
  */
 // TODO: still feels a bit hacky
-Circuit gate_cancellation(Circuit const circuit)
+inline Circuit gate_cancellation(Circuit const circuit)
 {
 	using op_type = typename Circuit::op_type;
 	using node_type = typename Circuit::node_type;

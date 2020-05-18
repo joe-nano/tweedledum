@@ -4,6 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
+#include "../../ir/Circuit.h"
 #include "../../ir/Module.h"
 #include "../../ir/Wire.h"
 
@@ -97,8 +98,7 @@ inline void update_permutation_inv(
 	}
 }
 
-template<typename Circuit>
-void tbs_unidirectional(Circuit& circuit, std::vector<wire::Id> const& qubits,
+inline void tbs_unidirectional(Circuit& circuit, std::vector<wire::Id> const& qubits,
     std::vector<uint32_t>& permutation)
 {
 	std::vector<std::pair<uint32_t, uint32_t>> gates;
@@ -129,8 +129,7 @@ void tbs_unidirectional(Circuit& circuit, std::vector<wire::Id> const& qubits,
 	}
 }
 
-template<typename Circuit>
-void tbs_bidirectional(Circuit& circuit, std::vector<wire::Id> const& qubits,
+inline void tbs_bidirectional(Circuit& circuit, std::vector<wire::Id> const& qubits,
     std::vector<uint32_t>& permutation)
 {
 	std::list<std::pair<uint32_t, uint32_t>> gates;
@@ -179,8 +178,7 @@ void tbs_bidirectional(Circuit& circuit, std::vector<wire::Id> const& qubits,
 	}
 }
 
-template<typename Circuit>
-void tbs_multidirectional(Circuit& circuit, std::vector<wire::Id> const& qubits,
+inline void tbs_multidirectional(Circuit& circuit, std::vector<wire::Id> const& qubits,
     std::vector<uint32_t>& permutation, tbs_params params = {})
 {
 	std::list<std::pair<uint32_t, uint32_t>> gates;

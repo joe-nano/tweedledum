@@ -4,6 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
+#include "../../ir/Circuit.h"
 #include "../../ir/Gate.h"
 #include "../../ir/Module.h"
 #include "../../ir/Wire.h"
@@ -24,8 +25,7 @@ namespace tweedledum {
  * \param qubits A qubit mapping
  * \param function A Boolean function
  */
-template<typename Circuit>
-void esop_phase_synth(Circuit& circuit, std::vector<wire::Id> const& qubits,
+inline void esop_phase_synth(Circuit& circuit, std::vector<wire::Id> const& qubits,
     kitty::dynamic_truth_table const& function)
 {
 	for (const auto& cube : easy::esop::esop_from_pprm(function)) {

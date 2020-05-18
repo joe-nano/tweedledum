@@ -4,6 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
+#include "../../ir/Circuit.h"
 #include "../../ir/Wire.h"
 #include "../../support/Angle.h"
 #include "../../support/ParityMap.h"
@@ -34,7 +35,6 @@ struct stg_from_exact_esop {
 	 * \param qubits   The subset of qubits the gate acts upon.
 	 * \param function
 	 */
-	template<class Circuit>
 	void operator()(Circuit& circuit, std::vector<wire::Id> const& qubits,
 	    kitty::dynamic_truth_table const& function) const
 	{
@@ -97,7 +97,6 @@ struct stg_from_pkrm {
 	 * \param qubits   The subset of qubits the gate acts upon.
 	 * \param function
 	 */
-	template<class Circuit>
 	void operator()(Circuit& circuit, std::vector<wire::Id> const& qubits,
 	    kitty::dynamic_truth_table const& function) const
 	{
@@ -154,7 +153,6 @@ struct stg_from_pprm {
 	 * \param qubits   The subset of qubits the gate acts upon.
 	 * \param function
 	 */
-	template<class Circuit>
 	void operator()(Circuit& circuit, std::vector<wire::Id> const& qubits,
 	    kitty::dynamic_truth_table const& function) const
 	{
@@ -217,7 +215,6 @@ struct stg_from_spectrum {
 	 * \param qubits   The subset of qubits the gate acts upon.
 	 * \param function
 	 */
-	template<class Circuit>
 	void operator()(Circuit& circuit, std::vector<wire::Id> const& qubits,
 	    kitty::dynamic_truth_table const& function) const
 	{

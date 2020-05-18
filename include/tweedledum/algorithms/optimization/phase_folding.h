@@ -4,6 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
+#include "../../ir/Circuit.h"
 #include "../../ir/Gate.h"
 #include "../../ir/Wire.h"
 #include "../../support/Angle.h"
@@ -20,8 +21,7 @@ namespace tweedledum {
  * This algorithm merges phase gates that are applied to the same computational
  * paths.
  */
-template<typename Circuit>
-Circuit phase_folding(Circuit const original)
+inline Circuit phase_folding(Circuit const original)
 {
 	using op_type = typename Circuit::op_type;
 	using sum_type = std::vector<uint32_t>;
