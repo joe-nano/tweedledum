@@ -17,22 +17,21 @@
 
 using namespace tweedledum;
 
-TEMPLATE_TEST_CASE(
-    "ASAP reschedule", "[asap_reschedule][transformations]", (CircuitDAG))
+TEST_CASE("ASAP reschedule", "[asap_reschedule][utility]")
 {
-	TestType network;
-	wire::Id const q0 = network.create_qubit();
-	wire::Id const q1 = network.create_qubit();
-	wire::Id const q2 = network.create_qubit();
+	CircuitDAG circuit(nullptr);
+	wire::Id const q0 = circuit.create_qubit();
+	wire::Id const q1 = circuit.create_qubit();
+	wire::Id const q2 = circuit.create_qubit();
 
-	network.create_op(GateLib::h, q0);
-	network.create_op(GateLib::cz, q1, q0);
-	network.create_op(GateLib::h, q0);
-	network.create_op(GateLib::h, q2);
-	CHECK_FALSE(check_layered(network));
+	circuit.create_op(GateLib::h, q0);
+	circuit.create_op(GateLib::cz, q1, q0);
+	circuit.create_op(GateLib::h, q0);
+	circuit.create_op(GateLib::h, q2);
+	CHECK_FALSE(check_layered(circuit));
 
-	TestType rescheduled = asap_reschedule(network);
+	CircuitDAG rescheduled = asap_reschedule(circuit);
 	CHECK(rescheduled.node(node::Id(4u)).op.is(gate_ids::h));
 	CHECK(check_layered(rescheduled));
-	CHECK(unitary_verify(network, rescheduled));
+	CHECK(unitary_verify(circuit, rescheduled));
 }

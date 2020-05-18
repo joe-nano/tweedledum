@@ -12,7 +12,7 @@
 
 using namespace tweedledum;
 
-TEST_CASE("Basic unitary functionality", "[unitary][networks]")
+TEST_CASE("Basic unitary functionality", "[unitary]")
 {
 	SECTION("An empty unitary")
 	{

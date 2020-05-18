@@ -5,6 +5,7 @@
 #include "tweedledum/ir/CircuitDAG.h"
 
 #include "tweedledum/ir/Gate.h"
+#include "tweedledum/ir/Module.h"
 #include "tweedledum/ir/Node.h"
 #include "tweedledum/ir/Operation.h"
 #include "tweedledum/ir/Wire.h"
@@ -13,58 +14,58 @@
 
 using namespace tweedledum;
 
-TEMPLATE_TEST_CASE("Operations DAG 'foreach_input' iterator",
-    "[CircuitDAG][template]", (CircuitDAG))
+TEST_CASE("Operations DAG 'foreach_input' iterator", "[CircuitDAG]")
 {
-	using node_type = typename TestType::node_type;
-	TestType network;
+	using node_type = typename CircuitDAG::node_type;
+	Module module;
+	CircuitDAG& circuit = module.circuit_;
 	SECTION("Input iterator")
 	{
-		network.create_qubit();
-		network.create_qubit();
-		network.create_qubit();
-		network.create_qubit();
+		circuit.create_qubit();
+		circuit.create_qubit();
+		circuit.create_qubit();
+		circuit.create_qubit();
 		uint32_t i = 0u;
-		network.foreach_input([&](node::Id const id) {
+		circuit.foreach_input([&](node::Id const id) {
 			CHECK(id == i);
 			++i;
 		});
 		i = 0u;
-		network.foreach_input(
+		circuit.foreach_input(
 		    [&](node_type const& node, node::Id const id) {
 			    CHECK(node.op.is(gate_ids::input));
 			    CHECK(id == i);
 			    ++i;
 		    });
 		i = 0u;
-		network.foreach_input([&](node_type const& node) {
+		circuit.foreach_input([&](node_type const& node) {
 			CHECK(node.op.is(gate_ids::input));
 		});
 	}
 	SECTION("Output iterator")
 	{
-		wire::Id q0 = network.create_qubit();
-		wire::Id q1 = network.create_qubit();
-		wire::Id q2 = network.create_qubit();
+		wire::Id q0 = circuit.create_qubit();
+		wire::Id q1 = circuit.create_qubit();
+		wire::Id q2 = circuit.create_qubit();
 		uint32_t i = 0u;
-		network.foreach_output([&](node::Id const id) {
+		circuit.foreach_output([&](node::Id const id) {
 			CHECK(id == i);
 			++i;
 		});
 		i = 0u;
-		network.foreach_output(
+		circuit.foreach_output(
 		    [&](node_type const& node, node::Id const id) {
 			    CHECK(node.op.is(gate_ids::input));
 			    CHECK(id == i);
 			    ++i;
 		    });
 		i = 0u;
-		network.foreach_output([&](node_type const& node) {
+		circuit.foreach_output([&](node_type const& node) {
 			CHECK(node.op.is(gate_ids::input));
 		});
 
-		node::Id n = network.create_op(GateLib::ncx, q0, q1, q2);
-		network.foreach_output(
+		node::Id n = circuit.create_op(GateLib::ncx, q0, q1, q2);
+		circuit.foreach_output(
 		    [&](node_type const& node, node::Id const id) {
 			    CHECK(node.op.is(gate_ids::ncx));
 			    CHECK(id == n);
@@ -72,37 +73,37 @@ TEMPLATE_TEST_CASE("Operations DAG 'foreach_input' iterator",
 	}
 }
 
-TEMPLATE_TEST_CASE("Operations 'foreach_output' iterator",
-    "[CircuitDAG][template]", (CircuitDAG))
+TEST_CASE("Operations 'foreach_output' iterator", "[CircuitDAG]")
 {
-	using node_type = typename TestType::node_type;
-	TestType network;
-	wire::Id q0 = network.create_qubit();
-	wire::Id q1 = network.create_qubit();
-	wire::Id q2 = network.create_qubit();
+	using node_type = typename CircuitDAG::node_type;
+	Module module;
+	CircuitDAG& circuit = module.circuit_;
+	wire::Id q0 = circuit.create_qubit();
+	wire::Id q1 = circuit.create_qubit();
+	wire::Id q2 = circuit.create_qubit();
 	SECTION("No operations")
 	{
 		uint32_t i = 0u;
-		network.foreach_output([&](node::Id const id) {
+		circuit.foreach_output([&](node::Id const id) {
 			CHECK(id == i);
 			++i;
 		});
 		i = 0u;
-		network.foreach_output(
+		circuit.foreach_output(
 		    [&](node_type const& node, node::Id const id) {
 			    CHECK(node.op.is(gate_ids::input));
 			    CHECK(id == i);
 			    ++i;
 		    });
 		i = 0u;
-		network.foreach_output([&](node_type const& node) {
+		circuit.foreach_output([&](node_type const& node) {
 			CHECK(node.op.is(gate_ids::input));
 		});
 	}
 	SECTION("One operation")
 	{
-		node::Id n = network.create_op(GateLib::ncx, q0, q1, q2);
-		network.foreach_output(
+		node::Id n = circuit.create_op(GateLib::ncx, q0, q1, q2);
+		circuit.foreach_output(
 		    [&](node_type const& node, node::Id const id) {
 			    CHECK(node.op.is(gate_ids::ncx));
 			    CHECK(id == n);
@@ -110,13 +111,13 @@ TEMPLATE_TEST_CASE("Operations 'foreach_output' iterator",
 	}
 	SECTION("One operation")
 	{
-		network.create_op(GateLib::cx, q1, q0);
-		node::Id n1 = network.create_op(GateLib::cx, q1, q2);
-		node::Id n2 = network.create_op(GateLib::cx, q2, q0);
+		circuit.create_op(GateLib::cx, q1, q0);
+		node::Id n1 = circuit.create_op(GateLib::cx, q1, q2);
+		node::Id n2 = circuit.create_op(GateLib::cx, q2, q0);
 
 		uint32_t i = 0;
 		std::array<node::Id, 3> node_ids = {n2, n1, n2};
-		network.foreach_output(
+		circuit.foreach_output(
 		    [&](node_type const& node, node::Id const id) {
 			    CHECK(node.op.is(gate_ids::cx));
 			    CHECK(id == node_ids.at(i));

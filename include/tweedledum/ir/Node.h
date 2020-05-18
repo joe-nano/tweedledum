@@ -29,23 +29,6 @@ private:
 
 constexpr Id invalid_id = Id(std::numeric_limits<uint32_t>::max());
 
-// NOTE:  This is used to wrap `operations` in the `Netlist` represention of a
-// quantum circuit.
-template<typename OpType>
-struct Wrapper {
-	OpType op;
-	mutable uint32_t data;
-
-	Wrapper(OpType const& op, uint32_t const data_value)
-	    : op(op), data(data_value)
-	{}
-
-	bool operator==(Wrapper const& other) const
-	{
-		return op == other.op;
-	}
-};
-
 template<typename OpType>
 struct Regular {
 	OpType op;

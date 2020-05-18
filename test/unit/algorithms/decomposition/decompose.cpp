@@ -7,7 +7,7 @@
 #include "tweedledum/algorithms/simulation/simulate_classically.h"
 #include "tweedledum/ir/CircuitDAG.h"
 #include "tweedledum/ir/Gate.h"
-#include "tweedledum/ir/Netlist.h"
+#include "tweedledum/ir/Module.h"
 #include "tweedledum/ir/Operation.h"
 #include "tweedledum/ir/Unitary.h"
 #include "tweedledum/ir/Wire.h"
@@ -18,9 +18,10 @@
 
 using namespace tweedledum;
 
-TEMPLATE_TEST_CASE("Decompose using barenco", "[decomp]", Netlist)
+TEST_CASE("Decompose using barenco", "[decomp]")
 {
-	TestType circuit;
+	Module module;
+	CircuitDAG& circuit = module.circuit_;
 	std::vector<wire::Id> qubits(5, wire::invalid_id);
 	std::generate(qubits.begin(), qubits.end(), [&]() {
 		return circuit.create_qubit();
@@ -41,7 +42,7 @@ TEMPLATE_TEST_CASE("Decompose using barenco", "[decomp]", Netlist)
 	decomp_params params;
 	params.barenco_controls_threshold = 2u;
 	params.gate_set = gate_set::classic_rev;
-	TestType decomposed = decompose(circuit, params);
+	CircuitDAG decomposed = decompose(circuit, params);
 	CHECK(decomposed.num_qubits() == circuit.num_qubits() + 1);
 
 	// Create ancilla
@@ -52,7 +53,7 @@ TEMPLATE_TEST_CASE("Decompose using barenco", "[decomp]", Netlist)
 	}
 }
 
-TEMPLATE_TEST_CASE("IBM", "[decomp]", Netlist, CircuitDAG)
+TEST_CASE("IBM", "[decomp]")
 {
 	decomp_params params;
 	params.gate_set = gate_set::ibm;
@@ -76,11 +77,12 @@ TEMPLATE_TEST_CASE("IBM", "[decomp]", Netlist, CircuitDAG)
 	}
 	for (Gate const& g : one_wire) {
 		// Create quantum circuit
-		TestType circuit;
+		Module module;
+		CircuitDAG& circuit = module.circuit_;
 		wire::Id q0 = circuit.create_qubit();
 		circuit.create_op(g, q0);
 		// Decompose
-		TestType decomposed = decompose(circuit, params);
+		CircuitDAG decomposed = decompose(circuit, params);
 		// Create unitaries
 		Unitary u_decomp(circuit);
 		Unitary u(1u);
@@ -89,12 +91,13 @@ TEMPLATE_TEST_CASE("IBM", "[decomp]", Netlist, CircuitDAG)
 	}
 	for (Gate const& g : two_wire) {
 		// Create quantum circuit
-		TestType circuit;
+		Module module;
+		CircuitDAG& circuit = module.circuit_;
 		wire::Id q0 = circuit.create_qubit();
 		wire::Id q1 = circuit.create_qubit();
 		circuit.create_op(g, q0, q1);
 		// Decompose
-		TestType decomposed = decompose(circuit, params);
+		CircuitDAG decomposed = decompose(circuit, params);
 		// Create unitaries
 		Unitary u_decomp(circuit);
 		Unitary u(2u);

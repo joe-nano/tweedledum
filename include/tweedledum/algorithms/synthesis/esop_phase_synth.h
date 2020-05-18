@@ -5,6 +5,7 @@
 #pragma once
 
 #include "../../ir/Gate.h"
+#include "../../ir/Module.h"
 #include "../../ir/Wire.h"
 
 #include <easy/esop/esop_from_pprm.hpp>
@@ -77,17 +78,14 @@ void esop_phase_synth(Circuit& circuit, std::vector<wire::Id> const& qubits,
  * \algexpects Boolean function
  * \algreturns Quantum circuit
  */
-template<class Circuit>
-Circuit esop_phase_synth(kitty::dynamic_truth_table const& function)
+void esop_phase_synth(Module& module, kitty::dynamic_truth_table const& function)
 {
-	Circuit circuit;
 	uint32_t const num_qubits = function.num_vars();
 	std::vector<wire::Id> qubits;
 	for (uint32_t i = 0u; i < num_qubits; ++i) {
-		qubits.emplace_back(circuit.create_qubit());
+		qubits.emplace_back(module.circuit_.create_qubit());
 	}
-	esop_phase_synth(circuit, qubits, function);
-	return circuit;
+	esop_phase_synth(module.circuit_, qubits, function);
 }
 
 } // namespace tweedledum

@@ -6,7 +6,7 @@
 
 #include "tweedledum/ir/CircuitDAG.h"
 #include "tweedledum/ir/Gate.h"
-#include "tweedledum/ir/Netlist.h"
+#include "tweedledum/ir/Module.h"
 #include "tweedledum/ir/Operation.h"
 #include "tweedledum/support/Angle.h"
 #include "tweedledum/support/BitMatrixRM.h"
@@ -15,56 +15,56 @@
 
 using namespace tweedledum;
 
-TEMPLATE_TEST_CASE(
-    "CNOT-RZ synthesis", "[cnot_rz][template]", CircuitDAG, Netlist)
+TEST_CASE("CNOT-RZ synthesis", "[cnot_rz]")
 {
 	ParityMap terms;
 	BitMatrixRM<> transform(3u, 3u);
 	transform.at(0, 0) = 1;
 	transform.at(1, 1) = 1;
 	transform.at(2, 2) = 1;
+	Module module;
 	SECTION("Trivial case")
 	{
 		terms.add_term(0b001, sym_angle::pi_quarter);
-		auto network = cnot_rz<TestType>(transform, terms);
-		CHECK(network.num_operations() == 1u);
+		cnot_rz(&module, transform, terms);
+		CHECK(module.circuit_.num_operations() == 1u);
 	}
 	SECTION("Still trivial, but with more rotations")
 	{
 		terms.add_term(0b001, sym_angle::pi_quarter);
 		terms.add_term(0b010, sym_angle::pi_quarter);
 		terms.add_term(0b100, sym_angle::pi_quarter);
-		auto network = cnot_rz<TestType>(transform, terms);
-		CHECK(network.num_operations() == 3u);
+		cnot_rz(&module, transform, terms);
+		CHECK(module.circuit_.num_operations() == 3u);
 	}
 	SECTION("Will require one CX")
 	{
 		transform.at(0, 1) = 1;
 		terms.add_term(0b011, sym_angle::pi_quarter);
-		auto network = cnot_rz<TestType>(transform, terms);
-		CHECK(network.num_operations() == 2u);
+		cnot_rz(&module, transform, terms);
+		CHECK(module.circuit_.num_operations() == 2u);
 	}
 	SECTION("Will require two CX")
 	{
 		transform.at(0, 1) = 1;
 		transform.at(1, 2) = 1;
 		terms.add_term(0b011, sym_angle::pi_quarter);
-		auto network = cnot_rz<TestType>(transform, terms);
-		CHECK(network.num_operations() == 3u);
+		cnot_rz(&module, transform, terms);
+		CHECK(module.circuit_.num_operations() == 3u);
 	}
 	SECTION("Will require two CX")
 	{
 		transform.at(0, 1) = 1;
 		transform.at(1, 2) = 1;
 		terms.add_term(0b011, sym_angle::pi_quarter);
-		auto network = cnot_rz<TestType>(transform, terms);
-		CHECK(network.num_operations() == 3u);
+		cnot_rz(&module, transform, terms);
+		CHECK(module.circuit_.num_operations() == 3u);
 	}
 	SECTION("Will require two CX")
 	{
 		terms.add_term(0b011, sym_angle::pi_quarter);
-		auto network = cnot_rz<TestType>(transform, terms);
-		CHECK(network.num_operations() == 3u);
+		cnot_rz(&module, transform, terms);
+		CHECK(module.circuit_.num_operations() == 3u);
 	}
 	SECTION("Will require more CX")
 	{
@@ -77,7 +77,7 @@ TEMPLATE_TEST_CASE(
 		terms.add_term(0b101, T_dagger);
 		terms.add_term(0b110, T_dagger);
 		terms.add_term(0b111, T);
-		auto network = cnot_rz<TestType>(transform, terms);
-		CHECK(network.num_operations() == 13u);
+		cnot_rz(&module, transform, terms);
+		CHECK(module.circuit_.num_operations() == 13u);
 	}
 }

@@ -4,44 +4,46 @@
 *-----------------------------------------------------------------------------*/
 #include "tweedledum/algorithms/optimization/phase_folding.h"
 
+#include "tweedledum/algorithms/verification/unitary_verify.h"
 #include "tweedledum/ir/CircuitDAG.h"
 #include "tweedledum/ir/Gate.h"
-#include "tweedledum/ir/Netlist.h"
+#include "tweedledum/ir/Module.h"
 #include "tweedledum/ir/Operation.h"
 
 #include <catch.hpp>
 
 using namespace tweedledum;
 
-TEMPLATE_TEST_CASE(
-    "Phase folding", "[phase_folding][template]", Netlist, CircuitDAG)
+TEST_CASE("Phase folding", "[phase_folding]")
 {
-	TestType network;
-	network.create_qubit("x1");
-	network.create_qubit("x2");
-	network.create_qubit("x3");
-	network.create_qubit("x4");
+	Module module;
+	CircuitDAG& circuit = module.circuit_;
+	circuit.create_qubit("x1");
+	circuit.create_qubit("x2");
+	circuit.create_qubit("x3");
+	circuit.create_qubit("x4");
 
-	network.create_op(GateLib::cx, "x3", "x4");
+	circuit.create_op(GateLib::cx, "x3", "x4");
 
-	network.create_op(GateLib::t, "x1");
-	network.create_op(GateLib::t, "x4");
+	circuit.create_op(GateLib::t, "x1");
+	circuit.create_op(GateLib::t, "x4");
 
-	network.create_op(GateLib::cx, "x1", "x2");
-	network.create_op(GateLib::cx, "x3", "x4");
+	circuit.create_op(GateLib::cx, "x1", "x2");
+	circuit.create_op(GateLib::cx, "x3", "x4");
 
-	network.create_op(GateLib::cx, "x2", "x3");
+	circuit.create_op(GateLib::cx, "x2", "x3");
 
-	network.create_op(GateLib::cx, "x2", "x1");
-	network.create_op(GateLib::cx, "x4", "x3");
+	circuit.create_op(GateLib::cx, "x2", "x1");
+	circuit.create_op(GateLib::cx, "x4", "x3");
 
-	network.create_op(GateLib::cx, "x2", "x3");
+	circuit.create_op(GateLib::cx, "x2", "x3");
 
-	network.create_op(GateLib::cx, "x1", "x2");
-	network.create_op(GateLib::tdg, "x3");
+	circuit.create_op(GateLib::cx, "x1", "x2");
+	circuit.create_op(GateLib::tdg, "x3");
 
-	network.create_op(GateLib::t, "x2");
+	circuit.create_op(GateLib::t, "x2");
 
-	auto opt_network = phase_folding(network);
-	// CHECK(check_optimized(network, opt_network));
+	auto optimized = phase_folding(circuit);
+	// FIXME: Something is wrong!!!
+	// CHECK(unitary_verify(circuit, optimized));
 }

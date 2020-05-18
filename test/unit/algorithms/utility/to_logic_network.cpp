@@ -5,7 +5,6 @@
 #include "tweedledum/algorithms/utility/to_logic_network.h"
 
 #include "tweedledum/ir/CircuitDAG.h"
-#include "tweedledum/ir/Netlist.h"
 #include "tweedledum/ir/Operation.h"
 #include "tweedledum/ir/Wire.h"
 
@@ -19,18 +18,17 @@
 using namespace mockturtle;
 using namespace tweedledum;
 
-TEMPLATE_TEST_CASE("Conver simple quantum circuit to XAG",
-    "[to_logic_network][template]", CircuitDAG, Netlist)
+TEST_CASE("Conver simple quantum circuit to XAG", "[to_logic_network]")
 {
-	TestType quantum_ntk;
-	wire::Id q0 = quantum_ntk.create_qubit("__i_0", wire::Mode::in);
-	wire::Id q1 = quantum_ntk.create_qubit("__i_1", wire::Mode::in);
-	wire::Id q2 = quantum_ntk.create_qubit("__o_0", wire::Mode::out);
+	CircuitDAG circuit(nullptr);
+	wire::Id q0 = circuit.create_qubit("__i_0", wire::Mode::in);
+	wire::Id q1 = circuit.create_qubit("__i_1", wire::Mode::in);
+	wire::Id q2 = circuit.create_qubit("__o_0", wire::Mode::out);
 
-	quantum_ntk.create_op(GateLib::ncx, std::vector<wire::Id>({q0, q1}),
+	circuit.create_op(GateLib::ncx, std::vector<wire::Id>({q0, q1}),
 	    std::vector<wire::Id>({q2}));
 
-	const auto logic_ntk = to_logic_network<xag_network>(quantum_ntk);
+	const auto logic_ntk = to_logic_network<xag_network>(circuit);
 
 	kitty::dynamic_truth_table function(2u);
 	kitty::create_from_binary_string(function, "1000");

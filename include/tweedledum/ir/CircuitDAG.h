@@ -12,6 +12,8 @@
 
 namespace tweedledum {
 
+class Module;
+
 /*! \brief Class used to represent a quantum circuit as a directed acyclic
  * graph.
  *
@@ -25,13 +27,15 @@ public:
 	using dstrg_type = Storage<node_type>;
 	using wstrg_type = wire::Storage;
 
-	CircuitDAG()
-	    : data_(std::make_shared<dstrg_type>("tweedledum_op_graph")),
+	CircuitDAG(Module* module)
+	    : module_(module),
+	      data_(std::make_shared<dstrg_type>("tweedledum_op_graph")),
 	      wires_(std::make_shared<wstrg_type>())
 	{}
 
-	explicit CircuitDAG(std::string_view name)
-	    : data_(std::make_shared<dstrg_type>(name)),
+	explicit CircuitDAG(Module* module, std::string_view name)
+	    : module_(module),
+	      data_(std::make_shared<dstrg_type>(name)),
 	      wires_(std::make_shared<wstrg_type>())
 	{}
 #pragma endregion
@@ -65,6 +69,11 @@ public:
 	bool check_gate_set(uint64_t const allowed_gates) const
 	{
 		return (data_->gate_set & ~allowed_gates) == 0ull;
+	}
+
+	Module* module() const
+	{
+		return module_;
 	}
 #pragma endregion
 
@@ -423,6 +432,7 @@ public:
 #pragma endregion
 
 private:
+	Module* module_;
 	std::shared_ptr<dstrg_type> data_;
 	std::shared_ptr<wstrg_type> wires_;
 };

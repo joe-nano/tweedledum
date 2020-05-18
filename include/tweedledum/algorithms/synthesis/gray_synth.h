@@ -268,18 +268,15 @@ void gray_synth(Circuit& circuit, std::vector<wire::Id> const& qubits,
  * \algexpects List of parities and rotation angles to synthesize
  * \algreturns {CNOT, Rz} circuit
  */
-template<class Circuit>
-Circuit gray_synth(uint32_t num_qubits, ParityMap<uint32_t> const& parities,
-    gray_synth_params params = {})
+inline void gray_synth(Module& module, uint32_t num_qubits,
+    ParityMap<uint32_t> const& parities, gray_synth_params params = {})
 {
 	assert(num_qubits <= 32);
-	Circuit circuit;
 	std::vector<wire::Id> qubits;
 	for (uint32_t i = 0u; i < num_qubits; ++i) {
-		qubits.emplace_back(circuit.create_qubit());
+		qubits.emplace_back(module.circuit_.create_qubit());
 	}
-	gray_synth(circuit, qubits, parities, params);
-	return circuit;
+	gray_synth(module.circuit_, qubits, parities, params);
 }
 
 } // namespace tweedledum

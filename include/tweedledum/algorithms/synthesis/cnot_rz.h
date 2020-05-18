@@ -5,6 +5,7 @@
 #pragma once
 
 #include "../../ir/Gate.h"
+#include "../../ir/Module.h"
 #include "../../ir/Wire.h"
 #include "../../support/BitMatrixRM.h"
 #include "../../support/ParityMap.h"
@@ -510,19 +511,17 @@ void cnot_rz(Circuit& circuit, std::vector<wire::Id> const& qubits,
 
 /*! \brief
  */
-template<class Circuit, class Matrix>
-Circuit cnot_rz(Matrix const& matrix, ParityMap<uint32_t> const& parities,
+template<class Matrix>
+void cnot_rz(Module* module, Matrix const& matrix, ParityMap<uint32_t> const& parities,
     cnot_rz_params params = {})
 {
 	assert(matrix.num_rows() <= 32);
 	assert(matrix.is_square());
-	Circuit circuit;
 	std::vector<wire::Id> qubits;
 	for (uint32_t i = 0u; i < matrix.num_rows(); ++i) {
-		qubits.emplace_back(circuit.create_qubit());
+		qubits.emplace_back(module->circuit_.create_qubit());
 	}
-	cnot_rz(circuit, qubits, matrix, parities, params);
-	return circuit;
+	cnot_rz(module->circuit_, qubits, matrix, parities, params);
 }
 
 } // namespace tweedledum

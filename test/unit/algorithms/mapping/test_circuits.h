@@ -2,14 +2,15 @@
 | Part of the tweedledum.  This file is distributed under the MIT License.
 | See accompanying file /LICENSE for details.
 *-----------------------------------------------------------------------------*/
+#include "tweedledum/ir/CircuitDAG.h"
 #include "tweedledum/ir/Gate.h"
 #include "tweedledum/ir/Wire.h"
 
-template<typename Network>
-Network test_circuit_00()
+using namespace tweedledum;
+
+inline CircuitDAG test_circuit_00()
 {
-	using namespace tweedledum;
-	Network circuit;
+	CircuitDAG circuit(nullptr);
 	wire::Id q0 = circuit.create_qubit();
 	circuit.create_cbit();
 	wire::Id q1 = circuit.create_qubit();
@@ -24,11 +25,9 @@ Network test_circuit_00()
 }
 
 // Extend ZDD mapper paper example
-template<typename Network>
-Network test_circuit_01()
+inline CircuitDAG test_circuit_01()
 {
-	using namespace tweedledum;
-	Network circuit;
+	CircuitDAG circuit(nullptr);
 	wire::Id q0 = circuit.create_qubit();
 	circuit.create_cbit();
 	wire::Id q1 = circuit.create_qubit();
@@ -54,11 +53,9 @@ Network test_circuit_01()
 }
 
 // Extend ZDD mapper paper example #2
-template<typename Network>
-Network test_circuit_02()
+inline CircuitDAG test_circuit_02()
 {
-	using namespace tweedledum;
-	Network circuit;
+	CircuitDAG circuit(nullptr);
 	wire::Id q0 = circuit.create_qubit();
 	circuit.create_cbit();
 	wire::Id q1 = circuit.create_qubit();
@@ -82,11 +79,9 @@ Network test_circuit_02()
 }
 
 // Extend ZDD mapper paper example #3
-template<typename Network>
-Network test_circuit_03()
+inline CircuitDAG test_circuit_03()
 {
-	using namespace tweedledum;
-	Network circuit;
+	CircuitDAG circuit(nullptr);
 	wire::Id q0 = circuit.create_qubit();
 	circuit.create_cbit();
 	wire::Id q1 = circuit.create_qubit();
@@ -115,11 +110,9 @@ Network test_circuit_03()
 }
 
 // Extend ZDD mapper paper example #3.5
-template<typename Network>
-Network test_circuit_04()
+inline CircuitDAG test_circuit_04()
 {
-	using namespace tweedledum;
-	Network circuit;
+	CircuitDAG circuit(nullptr);
 	wire::Id q0 = circuit.create_qubit();
 	circuit.create_cbit();
 	wire::Id q1 = circuit.create_qubit();
@@ -154,11 +147,9 @@ Network test_circuit_04()
 }
 
 // Extend ZDD mapper paper #4
-template<typename Network>
-Network test_circuit_05()
+inline CircuitDAG test_circuit_05()
 {
-	using namespace tweedledum;
-	Network circuit;
+	CircuitDAG circuit(nullptr);
 	wire::Id q0 = circuit.create_qubit();
 	circuit.create_cbit();
 	wire::Id q1 = circuit.create_qubit();
@@ -182,11 +173,9 @@ Network test_circuit_05()
 	return circuit;
 }
 
-template<typename Network>
-Network test_circuit_06()
+inline CircuitDAG test_circuit_06()
 {
-	using namespace tweedledum;
-	Network circuit;
+	CircuitDAG circuit(nullptr);
 	wire::Id q0 = circuit.create_qubit();
 	circuit.create_cbit();
 	wire::Id q1 = circuit.create_qubit();
@@ -207,11 +196,9 @@ Network test_circuit_06()
 	return circuit;
 }
 
-template<typename Network>
-Network test_circuit_07()
+inline CircuitDAG test_circuit_07()
 {
-	using namespace tweedledum;
-	Network circuit;
+	CircuitDAG circuit(nullptr);
 	wire::Id q0 = circuit.create_qubit();
 	circuit.create_cbit();
 	wire::Id q1 = circuit.create_qubit();

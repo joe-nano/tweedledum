@@ -16,61 +16,60 @@
 
 using namespace tweedledum;
 
-TEMPLATE_TEST_CASE(
-    "Test for Just-in-time mapper", "[jit_map][mapping]", (CircuitDAG))
+TEST_CASE("Test for Just-in-time mapper", "[jit_map][mapping]")
 {
 	SECTION("Test circuit 00")
 	{
-		TestType original = test_circuit_00<TestType>();
+		CircuitDAG original = test_circuit_00();
 		Device device = Device::path(original.num_qubits());
 		MappedDAG mapped = jit_map(original, device);
 		CHECK(map_verify(original, mapped));
 	}
 	SECTION("Test circuit 01")
 	{
-		TestType original = test_circuit_01<TestType>();
+		CircuitDAG original = test_circuit_01();
 		Device device = Device::ring(original.num_qubits());
 		MappedDAG mapped = jit_map(original, device);
 		CHECK(map_verify(original, mapped));
 	}
 	SECTION("Test circuit 02")
 	{
-		TestType original = test_circuit_02<TestType>();
+		CircuitDAG original = test_circuit_02();
 		Device device = Device::ring(original.num_qubits());
 		MappedDAG mapped = jit_map(original, device);
 		CHECK(map_verify(original, mapped));
 	}
 	SECTION("Test circuit 03")
 	{
-		TestType original = test_circuit_03<TestType>();
+		CircuitDAG original = test_circuit_03();
 		Device device = Device::ring(original.num_qubits());
 		MappedDAG mapped = jit_map(original, device);
 		CHECK(map_verify(original, mapped));
 	}
 	SECTION("Test circuit 04")
 	{
-		TestType original = test_circuit_04<TestType>();
+		CircuitDAG original = test_circuit_04();
 		Device device = Device::ring(original.num_qubits());
 		MappedDAG mapped = jit_map(original, device);
 		CHECK(map_verify(original, mapped));
 	}
 	SECTION("Test circuit 05")
 	{
-		TestType original = test_circuit_05<TestType>();
+		CircuitDAG original = test_circuit_05();
 		Device device = Device::ring(original.num_qubits());
 		MappedDAG mapped = jit_map(original, device);
 		CHECK(map_verify(original, mapped));
 	}
 	SECTION("Test circuit 06")
 	{
-		TestType original = test_circuit_06<TestType>();
+		CircuitDAG original = test_circuit_06();
 		Device device = Device::ring(original.num_qubits());
 		MappedDAG mapped = jit_map(original, device);
 		CHECK(map_verify(original, mapped));
 	}
 	SECTION("Test circuit 07")
 	{
-		TestType original = test_circuit_07<TestType>();
+		CircuitDAG original = test_circuit_07();
 		Device device = Device::ring(original.num_qubits());
 		MappedDAG mapped = jit_map(original, device);
 		CHECK(map_verify(original, mapped));

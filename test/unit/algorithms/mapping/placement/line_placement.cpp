@@ -9,7 +9,6 @@
 #include "tweedledum/ir/CircuitDAG.h"
 #include "tweedledum/ir/Gate.h"
 #include "tweedledum/ir/MappedDAG.h"
-#include "tweedledum/ir/Netlist.h"
 #include "tweedledum/ir/Operation.h"
 #include "tweedledum/ir/Wire.h"
 #include "tweedledum/target/Device.h"
@@ -19,79 +18,78 @@
 
 using namespace tweedledum;
 
-TEMPLATE_TEST_CASE("Test for line intial placement heuristic",
-    "[line_placement][mapping]", Netlist, CircuitDAG)
+TEST_CASE("Test for line intial placement heuristic", "[line_placement][mapping]")
 {
-	TestType network;
-	SECTION("Empty network")
+	CircuitDAG circuit(nullptr);
+	SECTION("Empty circuit")
 	{
-		Device device = Device::path(network.num_qubits());
+		Device device = Device::path(circuit.num_qubits());
 		std::vector<wire::Id> placement
-		    = detail::line_placement(network, device);
+		    = detail::line_placement(circuit, device);
 		CHECK(placement_verify(device, placement));
 	}
 	SECTION("Test circuit 00")
 	{
-		network = test_circuit_00<TestType>();
-		Device device = Device::path(network.num_qubits());
+		circuit = test_circuit_00();
+		Device device = Device::path(circuit.num_qubits());
 		std::vector<wire::Id> placement
-		    = detail::line_placement(network, device);
+		    = detail::line_placement(circuit, device);
 		CHECK(placement_verify(device, placement));
 	}
 	SECTION("Test circuit 01")
 	{
-		network = test_circuit_01<TestType>();
-		Device device = Device::path(network.num_qubits());
+		circuit = test_circuit_01();
+		Device device = Device::path(circuit.num_qubits());
 		std::vector<wire::Id> placement
-		    = detail::line_placement(network, device);
+		    = detail::line_placement(circuit, device);
 		CHECK(placement_verify(device, placement));
 	}
 	SECTION("Test circuit 02")
 	{
-		network = test_circuit_02<TestType>();
-		Device device = Device::path(network.num_qubits());
+		circuit = test_circuit_02();
+		Device device = Device::path(circuit.num_qubits());
 		std::vector<wire::Id> placement
-		    = detail::line_placement(network, device);
+		    = detail::line_placement(circuit, device);
 		CHECK(placement_verify(device, placement));
 	}
 	SECTION("Test circuit 03")
 	{
-		network = test_circuit_03<TestType>();
-		Device device = Device::path(network.num_qubits());
+		circuit = test_circuit_03();
+		Device device = Device::path(circuit.num_qubits());
 		std::vector<wire::Id> placement
-		    = detail::line_placement(network, device);
+		    = detail::line_placement(circuit, device);
 		CHECK(placement_verify(device, placement));
 	}
 	SECTION("Test circuit 04")
 	{
-		network = test_circuit_04<TestType>();
-		Device device = Device::path(network.num_qubits());
+		circuit = test_circuit_04();
+		Device device = Device::path(circuit.num_qubits());
 		std::vector<wire::Id> placement
-		    = detail::line_placement(network, device);
+		    = detail::line_placement(circuit, device);
 		CHECK(placement_verify(device, placement));
 	}
 	SECTION("Test circuit 05")
 	{
-		network = test_circuit_05<TestType>();
-		Device device = Device::path(network.num_qubits());
+		circuit = test_circuit_05();
+		Device device = Device::path(circuit.num_qubits());
 		std::vector<wire::Id> placement
-		    = detail::line_placement(network, device);
+		    = detail::line_placement(circuit, device);
 		CHECK(placement_verify(device, placement));
 	}
 	SECTION("Test circuit 06")
 	{
-		network = test_circuit_06<TestType>();
-		Device device = Device::path(network.num_qubits());
+		circuit = test_circuit_06();
+		Device device = Device::path(circuit.num_qubits());
 		std::vector<wire::Id> placement
-		    = detail::line_placement(network, device);
+		    = detail::line_placement(circuit, device);
 		CHECK(placement_verify(device, placement));
 	}
 	SECTION("Test circuit 07")
 	{
-		network = test_circuit_07<TestType>();
-		Device device = Device::path(network.num_qubits());
+		circuit = test_circuit_07();
+		Device device = Device::path(circuit.num_qubits());
 		std::vector<wire::Id> placement
-		    = detail::line_placement(network, device);
+		    = detail::line_placement(circuit, device);
 		CHECK(placement_verify(device, placement));
 	}
 }

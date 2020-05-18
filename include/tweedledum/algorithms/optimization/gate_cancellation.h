@@ -4,6 +4,7 @@
 *-----------------------------------------------------------------------------*/
 #pragma once
 
+#include "../../ir/CircuitDAG.h"
 #include "../../ir/Gate.h"
 #include "../../ir/Node.h"
 #include "../../ir/Wire.h"
@@ -17,11 +18,10 @@ namespace tweedledum {
 /*! \brief Cancellation of consecutive adjoint gates.
  */
 // TODO: still feels a bit hacky
-template<typename Circuit>
-Circuit gate_cancellation(Circuit const circuit)
+CircuitDAG gate_cancellation(CircuitDAG const circuit)
 {
-	using op_type = typename Circuit::op_type;
-	using node_type = typename Circuit::node_type;
+	using op_type = typename CircuitDAG::op_type;
+	using node_type = typename CircuitDAG::node_type;
 
 	uint32_t num_deletions = 0u;
 	circuit.clear_values();

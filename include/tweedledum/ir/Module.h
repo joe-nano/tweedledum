@@ -5,16 +5,22 @@
 #pragma once
 
 #include "CircuitDAG.h"
-#include "operations/w3_op.h"
+#include "Gate.h"
+#include "GateLib.h"
 
 namespace tweedledum {
 
 // TODO
 class Module {
 public:
-	explicit Module() : circuit_() {}
+	explicit Module() : circuit_(this)
+	{
+		register_gates(gate_lib_);
+	}
 
-	CircuitDAG<w3_op> circuit_;
+	CircuitDAG circuit_;
+	GateLib2 gate_lib_;
+	phmap::node_hash_set<Gate> gates_;
 };
 
 } // namespace tweedledum
