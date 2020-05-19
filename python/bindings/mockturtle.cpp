@@ -10,15 +10,14 @@
 
 namespace mockturtle {
 
-void xag_simulate(xag_network ntk)
+std::string xag_simulate(xag_network ntk)
 {
 	auto const results = simulate<kitty::dynamic_truth_table>(
 	    ntk, default_simulator<kitty::dynamic_truth_table>(ntk.num_pis()));
 
-	for (auto const& result : results) {
-		fmt::print("{}\n", kitty::to_binary(result));
-	}
+	return kitty::to_binary(results.at(0));
 }
+
 } // namespace mockturtle
 
 void init_mockturtle(pybind11::module& m)

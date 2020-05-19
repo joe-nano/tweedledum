@@ -7,10 +7,10 @@
 void init_mockturtle(pybind11::module &);
 void init_tweedledum(pybind11::module &);
 
-PYBIND11_MODULE(tweedledum, m)
+PYBIND11_MODULE(core, m)
 {
 	namespace py = pybind11;
-	m.doc() = "tweedledum";
+	m.doc() = "tweedledum core";
 	init_mockturtle(m);
 	init_tweedledum(m);
 }
