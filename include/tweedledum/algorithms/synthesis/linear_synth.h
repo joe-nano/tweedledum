@@ -22,8 +22,8 @@
 namespace tweedledum {
 namespace detail {
 
-inline void linear_synth_binary(Circuit& circuit, std::vector<wire::Id> const& qubits,
-    ParityMap<uint32_t> parities)
+inline void linear_synth_binary(Circuit& circuit,
+    std::vector<wire::Id> const& qubits, ParityMap<uint32_t> parities)
 {
 	const auto num_qubits = qubits.size();
 
@@ -36,7 +36,7 @@ inline void linear_synth_binary(Circuit& circuit, std::vector<wire::Id> const& q
 		auto rotation_angle = parities.extract_term(qubits_states[i]);
 		if (rotation_angle != 0.0) {
 			circuit.create_op(
-			    GateLib::rz(rotation_angle), qubits[i]);
+			    GateLib::identified_r1(rotation_angle), qubits[i]);
 		}
 	}
 
@@ -56,8 +56,8 @@ inline void linear_synth_binary(Circuit& circuit, std::vector<wire::Id> const& q
 				auto rotation_angle = parities.extract_term(
 				    qubits_states[first_num]);
 				if (rotation_angle != 0.0) {
-					circuit.create_op(
-					    GateLib::rz(rotation_angle),
+					circuit.create_op(GateLib::identified_r1(
+					                      rotation_angle),
 					    qubits[first_num]);
 				}
 			}
@@ -70,8 +70,8 @@ inline void linear_synth_binary(Circuit& circuit, std::vector<wire::Id> const& q
 	}
 }
 
-inline void linear_synth_gray(Circuit& circuit, std::vector<wire::Id> const& qubits,
-    ParityMap<uint32_t> parities)
+inline void linear_synth_gray(Circuit& circuit,
+    std::vector<wire::Id> const& qubits, ParityMap<uint32_t> parities)
 {
 	const auto num_qubits = qubits.size();
 
@@ -90,7 +90,7 @@ inline void linear_synth_gray(Circuit& circuit, std::vector<wire::Id> const& qub
 		auto rotation_angle = parities.extract_term(qubits_states[i]);
 		if (rotation_angle != 0.0) {
 			circuit.create_op(
-			    GateLib::rz(rotation_angle), qubits[i]);
+			    GateLib::identified_r1(rotation_angle), qubits[i]);
 		}
 	}
 
@@ -106,7 +106,8 @@ inline void linear_synth_gray(Circuit& circuit, std::vector<wire::Id> const& qub
 			    = parities.extract_term(qubits_states[i]);
 			if (rotation_angle != 0.0) {
 				circuit.create_op(
-				    GateLib::rz(rotation_angle), qubits[i]);
+				    GateLib::identified_r1(rotation_angle),
+				    qubits[i]);
 			}
 		}
 		const auto temp = std::log2(
@@ -116,7 +117,7 @@ inline void linear_synth_gray(Circuit& circuit, std::vector<wire::Id> const& qub
 		auto rotation_angle = parities.extract_term(qubits_states[i]);
 		if (rotation_angle != 0.0) {
 			circuit.create_op(
-			    GateLib::rz(rotation_angle), qubits[i]);
+			    GateLib::identified_r1(rotation_angle), qubits[i]);
 		}
 	}
 }
