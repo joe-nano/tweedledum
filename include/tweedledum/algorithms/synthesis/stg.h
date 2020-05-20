@@ -105,8 +105,7 @@ struct stg_from_pkrm {
 		       >= static_cast<std::size_t>(num_controls) + 1u);
 
 		std::vector<wire::Id> target = {qubits.back()};
-		for (auto const& cube :
-		    easy::esop::esop_from_optimum_pkrm(function)) {
+		for (auto const& cube : kitty::esop_from_optimum_pkrm(function)) {
 			std::vector<wire::Id> controls;
 			std::vector<wire::Id> negations;
 			auto bits = cube._bits;
@@ -161,7 +160,7 @@ struct stg_from_pprm {
 		       >= static_cast<std::size_t>(num_controls) + 1u);
 
 		std::vector<wire::Id> target = {qubits.back()};
-		for (auto const& cube : easy::esop::esop_from_pprm(function)) {
+		for (auto const& cube : kitty::esop_from_pprm(function)) {
 			assert(cube._bits == cube._mask); /* PPRM property */
 			std::vector<wire::Id> controls;
 			auto bits = cube._bits;
