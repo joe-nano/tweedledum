@@ -8,9 +8,10 @@
 #include <pybind11/pybind11.h>
 #include <sstream>
 #include <string>
-#include <tweedledum/algorithms/decomposition/decompose.h>
+#include <tweedledum/algorithms/decomposition/barenco.h>
 #include <tweedledum/algorithms/synthesis/oracles/xag_synth.h>
 #include <tweedledum/algorithms/synthesis/stg.h>
+#include <tweedledum/algorithms/utility/rewrite.h>
 #include <tweedledum/ir/Circuit.h>
 #include <tweedledum/ir/Module.h>
 #include <tweedledum/ir/Wire.h>
@@ -59,10 +60,30 @@ std::string synthesize_xag(
 	default:
 		break;
 	}
-	decomp_params params;
-	params.barenco_controls_threshold = 2u;
-	params.gate_set = gate_set::classic_rev;
-	Circuit decomposed = decompose(circuit, params);
+
+	using op_type = typename Circuit::op_type;
+	barenco_params params;
+	params.use_ncrx = false;
+	auto ncx_rewriter = [&](Circuit& dest, op_type const& op) {
+		if (op.is(gate_ids::ncx)) {
+			if (op.num_wires() == dest.num_qubits()) {
+				dest.create_qubit(wire::Mode::ancilla);
+			}
+			std::vector<wire::Id> controls;
+			std::vector<wire::Id> targets;
+			op.foreach_control([&](wire::Id control) {
+				controls.push_back(control);
+			});
+			op.foreach_target([&](wire::Id target) {
+				targets.push_back(target);
+			});
+			detail::barenco_decomp(dest, GateLib::ncx, controls,
+			    targets.at(0), params);
+			return true;
+		}
+		return false;
+	};
+	Circuit decomposed = rewrite_circuit(circuit, ncx_rewriter);
 	std::ostringstream os;
 	write_qasm(decomposed, os);
 	return os.str();
