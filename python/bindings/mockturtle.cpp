@@ -31,6 +31,7 @@ void init_mockturtle(pybind11::module& m)
 
 	py::class_<xag_network>(m, "xag_network")
 	    .def(py::init<>())
+	    .def("get_constant", &xag_network::get_constant)
 	    .def("create_pi", &xag_network::create_pi, py::arg("name") = "")
 	    .def("create_po", &xag_network::create_po, py::arg("f"),
 	        py::arg("name") = "")
