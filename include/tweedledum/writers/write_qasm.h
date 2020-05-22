@@ -65,10 +65,17 @@ void write_qasm(Circuit const circuit, std::ostream& os = std::cout)
 			os << fmt::format("tdg q[{}];\n", op.target());
 			break;
 
-		case gate_ids::cx:
+		case gate_ids::cx: {
+			wire::Id c = op.control();
+			if (c.is_complemented()) {
+				os << fmt::format("x q[{}];\n", c);
+			}
 			os << fmt::format(
-			    "cx q[{}], q[{}];\n", op.control(), op.target());
-			break;
+			    "cx q[{}], q[{}];\n", c, op.target());
+			if (c.is_complemented()) {
+				os << fmt::format("x q[{}];\n", c);
+			}
+		} break;
 
 		case gate_ids::cy:
 			os << fmt::format(
@@ -85,10 +92,25 @@ void write_qasm(Circuit const circuit, std::ostream& os = std::cout)
 			    op.target(1u));
 			break;
 
-		case gate_ids::ncx:
+		case gate_ids::ncx: {
+			// FIXME: I wish OpenQASM had support for negative controls
+			wire::Id c0 = op.control(0u);
+			wire::Id c1 = op.control(1u);
+			if (c0.is_complemented()) {
+				os << fmt::format("x q[{}];\n", c0);
+			}
+			if (c1.is_complemented()) {
+				os << fmt::format("x q[{}];\n", c1);
+			}
 			os << fmt::format("ccx q[{}], q[{}], q[{}];\n",
-			    op.control(0u), op.control(1u), op.target());
-			break;
+			    c0, c1, op.target());
+			if (c0.is_complemented()) {
+				os << fmt::format("x q[{}];\n", c0);
+			}
+			if (c1.is_complemented()) {
+				os << fmt::format("x q[{}];\n", c1);
+			}
+		} break;
 		// Parameterisable gates
 		case gate_ids::r1:
 			os << fmt::format("u1({}) q[{}];\n",
